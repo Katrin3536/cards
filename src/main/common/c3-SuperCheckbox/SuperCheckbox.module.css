@@ -1,0 +1,36 @@
+.checkbox {
+    appearance: none;
+    width: 20px;
+    height: 20px;
+    border: 2px solid blueviolet;
+    background-color: #fbf2ff;
+}
+
+.spanClassName {
+    color: white;
+    font-size: 20px;
+    font-family: Verdana;
+}
+
+.label {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+}
+
+.checkbox:checked {
+    appearance: none;
+    background-image: url("greenTick.svg");
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+
+.checkbox:focus {
+    outline: 2px solid #ecd5f7;
+}
+
+
+
+
+
+
