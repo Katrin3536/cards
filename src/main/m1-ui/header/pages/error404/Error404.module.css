@@ -1,0 +1,25 @@
+.wrapper_error {
+    color: red;
+    margin-top: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    font-weight: bolder;
+}
+
+.number {
+    font-size: 100px;
+}
+
+.page {
+    font-size: 50px;
+}
+
+.picture {
+    font-size: 50px;
+    background-image: url("doubt-3516365.jpg");
+    background-size: contain;
+    width: 300px;
+    height: 200px;
+}
