@@ -1,7 +1,7 @@
 import './App.css';
-import Header from './main/m1-ui/header/Header'
+import Header from '../header/Header'
 import {HashRouter} from "react-router-dom";
-import RoutesConstants from "./main/m1-ui/routes/RoutesConstants";
+import RoutesConstants from "../routes/RoutesConstants";
 
 function App() {
     return (
