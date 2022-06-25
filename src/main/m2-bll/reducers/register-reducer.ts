@@ -1,7 +1,7 @@
 const initialState= "hello";
 
 const ANY_CASE = 'ANY-CASE'
-export const testReducer = (state:InitialStateType = initialState, action: ActionsType):InitialStateType => {
+export const registerReducer = (state:InitialStateType = initialState, action: ActionsType):InitialStateType => {
     switch (action.type) {
         case ANY_CASE:
             return state

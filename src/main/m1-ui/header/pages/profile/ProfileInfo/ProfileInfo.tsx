@@ -4,6 +4,8 @@ import LogoutIcon from "@mui/icons-material/Logout";
 import { useSelector } from "react-redux";
 import defaultImage from "../../../../../assets/img/def-avatar.png";
 import classes from "./ProfileInfo.module.css";
+import { useAppDispatch } from "../../../../../m2-bll/store";
+import { logoutTC } from "../../../../../m2-bll/reducers/auth-reducer";
 
 // type ProfilePhotoPropsType = {
 //   profileImage: string;
@@ -15,7 +17,12 @@ import classes from "./ProfileInfo.module.css";
 export const ProfileInfo: React.FC = () => {
   const profileImage = useSelector((state) => state);
 
-  const logoutHandler = () => {};
+  const dispatch = useAppDispatch();
+
+  const logoutHandler = () => {
+    dispatch(logoutTC());
+  };
+
   return (
     <div className={classes.wrapper}>
       <div className={classes.userAvatar}>
