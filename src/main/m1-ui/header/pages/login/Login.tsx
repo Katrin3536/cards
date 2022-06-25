@@ -2,6 +2,8 @@ import {Button, Checkbox, Container, FormControl, FormControlLabel, FormGroup, F
 import React from 'react';
 import style from './Login.module.css'
 import {useFormik} from "formik";
+import {PATH} from "../../../routes/RoutesConstants";
+import {NavLink} from "react-router-dom";
 
 function Login() {
 
@@ -10,6 +12,11 @@ function Login() {
             if (!value.password) {
                 return {
                     password: 'Password is required'
+                }
+            }
+            if (value.password.length <= 5) {
+                return {
+                    password: 'Password should be > 5'
                 }
             }
             if (!value.email) {
@@ -21,7 +28,7 @@ function Login() {
         initialValues: {
             email: '',
             password: '',
-            rememberMe: false
+            /*rememberMe: false*/
         },
         onSubmit: values => {
             alert(JSON.stringify(values));
@@ -29,19 +36,15 @@ function Login() {
     });
 
     return (
-        <div className={style.login}>
+        <div className={style.loginContainer}>
             <Container fixed>
                 <Grid container justifyContent={'center'}>
                     <form onSubmit={formik.handleSubmit}>
                         <FormControl>
                             <FormLabel>
                                 <FormLabel>
-                                    <p>To log in get registered
-                                        <a href={'https://social-network.samuraijs.com/'}
-                                           target={'_blank'}> here
-                                        </a>
-                                    </p>
-                                    <p>or use common test account credentials:</p>
+                                    <h1>IT-INCUBATOR</h1>
+                                    <h2>Sign in</h2>
                                     <p>Email: free@samuraijs.com</p>
                                     <p>Password: free</p>
                                 </FormLabel>
@@ -59,16 +62,18 @@ function Login() {
                                         {...formik.getFieldProps('password')}
                                     />
                                     {formik.errors.password ? <div>{formik.errors.password}</div> : null}
-                                    <FormControlLabel
+{/*                                    <FormControlLabel
                                         label={'Remember me'}
                                         control={<Checkbox
                                             checked={formik.values.rememberMe}
                                             {...formik.getFieldProps('rememberMe')}
                                         />}
-                                    />
+                                    />*/}
                                     <Button type={'submit'} variant={'contained'} color={'primary'}>
                                         Login
                                     </Button>
+                                    <p>Don`t have an account?</p>
+                                        <NavLink to={PATH.REGISTRATION}>Sign Up</NavLink>
                                 </FormGroup>
                             </FormLabel>
                         </FormControl>
@@ -81,9 +86,21 @@ function Login() {
                     <Route path="*" element={<h1>404 ERROR</h1>} />
                     <Route path="/404" element={<Navigate to={'/404'} />} />
                 </Routes>*/}
+
+                {/*<SpacingGrid />*/}
+
+
+
+
             </Container>
         </div>
     );
 }
 
 export default Login;
+
+
+
+
+
+
