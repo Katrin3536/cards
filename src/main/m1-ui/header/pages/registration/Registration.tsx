@@ -50,7 +50,7 @@ export const Registration = () => {
 
         onSubmit: values => {
             alert(JSON.stringify(values, null, 2))
-            // dispatch(loginTC(values));
+            // dispatch(registerTC(values));
             formik.resetForm()
         },
     });
