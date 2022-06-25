@@ -1,0 +1,21 @@
+.wrapper {
+  position: relative;
+  padding: 10px;
+}
+
+
+.userAvatar {
+  display: flex;
+  justify-content: center;
+  min-width: 200px;
+  border-radius: 7px;
+  padding-bottom: 30px;
+}
+
+.logoutBtn{
+  cursor: pointer;
+  position: absolute;
+  content: '';
+  right: 0;
+  top: 0;
+}

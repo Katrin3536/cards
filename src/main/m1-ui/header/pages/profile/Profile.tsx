@@ -1,12 +1,23 @@
-import React from 'react';
-import style from './Profile.module.css'
+import React from "react";
+import { Grid, Paper } from "@mui/material";
+import { ProfileInfo } from "./ProfileInfo/ProfileInfo";
+import style from "./Profile.module.css";
 
-function Profile() {
-    return (
-        <div className={style.profile}>
-           PROFILE
-        </div>
-    );
-}
+const Profile: React.FC = () => {
+  return (
+    <div className={style.profile}>
+      <Grid container spacing={3}>
+        <Grid item xs={4}>
+          <Paper style={{ padding: "10px" }}>
+            <ProfileInfo />
+          </Paper>
+        </Grid>
+        <Grid item xs={8}>
+          <Paper style={{ padding: "10px" }}>Cards</Paper>
+        </Grid>
+      </Grid>
+    </div>
+  );
+};
 
 export default Profile;
