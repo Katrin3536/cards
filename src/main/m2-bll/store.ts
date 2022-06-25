@@ -1,4 +1,3 @@
-import { testReducer } from "./test-reducer";
 import {
   AnyAction,
   applyMiddleware,
@@ -10,6 +9,7 @@ import { TypedUseSelectorHook } from "react-redux";
 import { useSelector } from "react-redux";
 import { useDispatch } from "react-redux";
 import { composeWithDevTools } from "redux-devtools-extension";
+import {testReducer} from './reducers/test-reducer';
 
 let rootReducer = combineReducers({
   state: testReducer,
