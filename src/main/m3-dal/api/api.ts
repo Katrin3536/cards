@@ -7,7 +7,11 @@ export const instance = axios.create({
 
 // ==== AUTHORIZATION ====
 
-export const authAPI = {};
+export const authAPI = {
+  logout() {
+    return instance.delete(`auth/me`).then((response) => response.data);
+  },
+};
 
 // ==== REGISTRATION ====
 
