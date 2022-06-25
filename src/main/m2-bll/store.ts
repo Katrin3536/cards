@@ -1,4 +1,4 @@
-import {testReducer} from './test-reducer';
+import {testReducer} from './reducers/test-reducer';
 import {applyMiddleware,combineReducers , legacy_createStore as createStore} from 'redux'
 import thunk from 'redux-thunk'
 
