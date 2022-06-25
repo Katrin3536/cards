@@ -8,5 +8,6 @@ function Registration() {
         </div>
     );
 }
-
 export default Registration;
+
+
