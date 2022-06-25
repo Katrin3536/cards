@@ -42,4 +42,5 @@ export type AppThunk<ReturnType = void> = ThunkAction<
 >;
 
 //@ts-ignore
+
 window.store = store;
