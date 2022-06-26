@@ -10,8 +10,10 @@ import { useSelector } from "react-redux";
 import { useDispatch } from "react-redux";
 import { composeWithDevTools } from "redux-devtools-extension";
 import { authReducer } from "./reducers/auth-reducer";
+import { appReducer } from "./reducers/app-reducer";
 
 let rootReducer = combineReducers({
+  app: appReducer,
   authirization: authReducer,
 });
 
