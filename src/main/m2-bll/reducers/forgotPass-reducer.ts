@@ -1,7 +1,6 @@
-import { AxiosResponse } from "axios";
 import { AnyAction, Dispatch } from "redux";
-import { authAPI, forgotPassAPI } from "../../m3-dal/api/api";
-import { appSetStatusAC } from "./app-reducer";
+import { forgotPassAPI } from "../../m3-dal/api/api";
+import { appSetErrorAC, appSetStatusAC } from "./app-reducer";
 
 const initialState = {
   success: false,
@@ -39,16 +38,12 @@ export const forgotPassTC =
     dispatch(appSetStatusAC("loading"));
     forgotPassAPI
       .forgot(email)
-      .then((response) => console.log(response.data.info))
-      .catch((e) => console.log(e.response.data.error))
-      // if (res.info === "logOut success —ฅ/ᐠ.̫ .ᐟ\ฅ—") {
-      //   dispatch(logoutAC());
-      // } else {
-      // dispatch(appSetErrorAC(res.error));
-
-      // .catch((err: AxiosError) => {
-      //   dispatch(appSetErrorAC(err.message));
-      // });
+      .then((response) => {
+        if (response.data.success) {
+          dispatch(forgotPassAC());
+        }
+      })
+      .catch((e) => dispatch(appSetErrorAC(e.response.data.error)))
       .finally(() => dispatch(appSetStatusAC("idle")));
   };
 

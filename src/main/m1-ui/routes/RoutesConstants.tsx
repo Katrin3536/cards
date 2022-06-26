@@ -7,6 +7,7 @@ import NewPassword from "../header/pages/newPassword/NewPassword";
 import { PasswordRecovering } from "../header/pages/passwordRecovering/PasswordRecovering";
 import Profile from "../header/pages/profile/Profile";
 import { Registration } from "../header/pages/registration/Registration";
+import { CheckEmail } from "../header/pages/CheckEmail/CheckEmail";
 
 export const PATH = {
   LOGIN: "/Login",
@@ -16,6 +17,7 @@ export const PATH = {
   PASSWORD_RECOVERING: "/PasswordRecovering",
   NEW_PASSWORD: "/NewPassword",
   TEST_PAGE: "/TestPage",
+  CHECK_EMAIL: "/check-email",
 };
 
 function RoutesConstants() {
@@ -34,6 +36,7 @@ function RoutesConstants() {
         <Route path={PATH.NEW_PASSWORD} element={<NewPassword />} />
         <Route path={PATH.TEST_PAGE} element={<TestPage />} />
         <Route path={"/*"} element={<Error404 />} />
+        <Route path={PATH.CHECK_EMAIL} element={<CheckEmail />} />
       </Routes>
     </div>
   );

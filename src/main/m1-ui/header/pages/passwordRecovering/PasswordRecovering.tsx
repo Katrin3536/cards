@@ -2,18 +2,21 @@ import {
   Button,
   FormControl,
   FormGroup,
-  FormLabel,
   Grid,
+  LinearProgress,
   Link,
   TextField,
 } from "@mui/material";
 import { useFormik } from "formik";
 import React from "react";
+import { Navigate } from "react-router-dom";
 import { forgotPassTC } from "../../../../m2-bll/reducers/forgotPass-reducer";
-import { useAppDispatch } from "../../../../m2-bll/store";
+import { useAppDispatch, useAppSelector } from "../../../../m2-bll/store";
 import style from "./PasswordRecovering.module.css";
 
 export const PasswordRecovering: React.FC = () => {
+  const status = useAppSelector((state) => state.app.status);
+  const successRecovery = useAppSelector((state) => state.recoveryPass.success);
   const dispatch = useAppDispatch();
 
   type FormikErrorType = {
@@ -44,42 +47,51 @@ export const PasswordRecovering: React.FC = () => {
     },
   });
 
-  return (
-    <Grid
-      container
-      justifyContent={"center"}
-      direction={"column"}
-      className={style.passwordRecovering}
-    >
-      <h3 className={style.title}>it-incubator</h3>
-      <h3 className={style.subtitle}>Forgot your password?</h3>
-      <Grid item justifyContent={"center"} style={{ marginTop: "30px" }}>
-        <form onSubmit={formik.handleSubmit}>
-          <FormControl>
-            <FormGroup>
-              <TextField
-                label="Email"
-                margin="normal"
-                {...formik.getFieldProps("email")}
-              />
-              {formik.touched.email && formik.errors.email ? (
-                <div style={{ color: "red" }}>{formik.errors.email}</div>
-              ) : null}
+  if (successRecovery) {
+    return <Navigate to="/check-email" />;
+  }
 
-              <Button
-                type={"submit"}
-                variant={"contained"}
-                color={"primary"}
-                style={{ marginTop: "100px" }}
-              >
-                Send instructions
-              </Button>
-            </FormGroup>
-          </FormControl>
-        </form>
+  return (
+    <>
+      {status === "loading" && <LinearProgress />}
+      <Grid
+        container
+        justifyContent={"center"}
+        direction={"column"}
+        className={style.passwordRecovering}
+      >
+        <h3 className={style.title}>it-incubator</h3>
+        <h3 className={style.subtitle}>Forgot your password?</h3>
+        <Grid item justifyContent={"center"} style={{ marginTop: "30px" }}>
+          <form onSubmit={formik.handleSubmit}>
+            <FormControl>
+              <FormGroup>
+                <TextField
+                  label="Email"
+                  margin="normal"
+                  {...formik.getFieldProps("email")}
+                />
+                {formik.touched.email && formik.errors.email ? (
+                  <div style={{ color: "red" }}>{formik.errors.email}</div>
+                ) : null}
+
+                <Button
+                  type={"submit"}
+                  variant={"contained"}
+                  color={"primary"}
+                  style={{ marginTop: "100px" }}
+                >
+                  Send instructions
+                </Button>
+              </FormGroup>
+            </FormControl>
+          </form>
+        </Grid>
+        <span className={style.description}>
+          Did you remember your password?
+        </span>
+        <Link className={style.tryLogin}>Try loggin in</Link>
       </Grid>
-      <span className={style.description}>Did you remember your password?</span>
-      <Link className={style.tryLogin}>Try loggin in</Link>
-    </Grid>
+    </>
   );
 };

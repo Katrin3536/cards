@@ -11,10 +11,12 @@ import { useDispatch } from "react-redux";
 import { composeWithDevTools } from "redux-devtools-extension";
 import { authReducer } from "./reducers/auth-reducer";
 import { appReducer } from "./reducers/app-reducer";
+import { forgotReducer } from "./reducers/forgotPass-reducer";
 
 let rootReducer = combineReducers({
   app: appReducer,
   authirization: authReducer,
+  recoveryPass: forgotReducer,
 });
 
 export const store = createStore(
