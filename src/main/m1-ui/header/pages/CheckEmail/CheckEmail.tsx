@@ -1,14 +1,10 @@
-import { LinearProgress } from "@mui/material";
 import React from "react";
-import { useAppSelector } from "../../../../m2-bll/store";
 import checkmail from "../../../../assets/img/checkemail.png";
 import style from "./CheckEmail.module.css";
 
 export const CheckEmail: React.FC = () => {
-  const status = useAppSelector((state) => state.app.status);
   return (
     <div className={style.checkEmail}>
-      {status === "loading" && <LinearProgress />}
       <h3 className={style.title}>it-incubator</h3>
       <div
         className={style.image}

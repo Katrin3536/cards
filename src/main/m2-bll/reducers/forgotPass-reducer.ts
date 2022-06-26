@@ -4,11 +4,13 @@ import { appSetErrorAC, appSetStatusAC } from "./app-reducer";
 
 const initialState = {
   success: false,
+  passIsChanged: false,
 };
 
 type InitialStateType = typeof initialState;
 
 const FORGOT_PASSWORD = "FORGOT/recovery";
+const PASSWORD_IS_CHANGED = "FORGOT/password-is-changed";
 
 export const forgotReducer = (
   state: InitialStateType = initialState,
@@ -22,6 +24,13 @@ export const forgotReducer = (
       };
     }
 
+    case PASSWORD_IS_CHANGED: {
+      return {
+        ...state,
+        passIsChanged: !state.passIsChanged,
+      };
+    }
+
     default:
       return state;
   }
@@ -30,6 +39,7 @@ export const forgotReducer = (
 //actions
 
 export const forgotPassAC = () => ({ type: FORGOT_PASSWORD } as const);
+export const passIsCangedAC = () => ({ type: PASSWORD_IS_CHANGED } as const);
 
 // THUNKS
 
@@ -47,7 +57,27 @@ export const forgotPassTC =
       .finally(() => dispatch(appSetStatusAC("idle")));
   };
 
+export const createNewPassTC =
+  (password: string, token: string | undefined) =>
+  (dispatch: Dispatch<AnyAction>) => {
+    dispatch(appSetStatusAC("loading"));
+    console.log(password, token);
+    forgotPassAPI
+      .createNewPassword(password, token)
+      .then((response) => {
+        console.log(response);
+        if (response.status === 200) {
+          alert(response.data.info);
+          dispatch(passIsCangedAC());
+        }
+      })
+      .catch((e) => dispatch(appSetErrorAC(e.response.data.error)))
+      .finally(() => dispatch(appSetStatusAC("idle")));
+  };
+
 //types
 
 export type ForgotPassType = ReturnType<typeof forgotPassAC>;
-export type AuthActionsType = ForgotPassType;
+export type PassIsCangedType = ReturnType<typeof passIsCangedAC>;
+
+export type AuthActionsType = ForgotPassType | PassIsCangedType;

@@ -32,6 +32,13 @@ export const forgotPassAPI = {
     };
     return instance.post(`auth/forgot`, data);
   },
+
+  createNewPassword(password: string, resetPasswordToken: string | undefined) {
+    return instance.post(`auth/set-new-password`, {
+      password,
+      resetPasswordToken,
+    });
+  },
 };
 
 // ==== TYPES ====

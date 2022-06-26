@@ -62,7 +62,11 @@ export const PasswordRecovering: React.FC = () => {
       >
         <h3 className={style.title}>it-incubator</h3>
         <h3 className={style.subtitle}>Forgot your password?</h3>
-        <Grid item justifyContent={"center"} style={{ marginTop: "30px" }}>
+        <Grid
+          item
+          justifyContent={"center"}
+          style={{ marginTop: "30px", maxWidth: "260px", marginBottom: "68px" }}
+        >
           <form onSubmit={formik.handleSubmit}>
             <FormControl>
               <FormGroup>
