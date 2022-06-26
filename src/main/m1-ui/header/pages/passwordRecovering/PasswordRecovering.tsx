@@ -9,7 +9,7 @@ import {
 } from "@mui/material";
 import { useFormik } from "formik";
 import React from "react";
-import { Navigate } from "react-router-dom";
+import { Navigate, useNavigate } from "react-router-dom";
 import { forgotPassTC } from "../../../../m2-bll/reducers/forgotPass-reducer";
 import { useAppDispatch, useAppSelector } from "../../../../m2-bll/store";
 import style from "./PasswordRecovering.module.css";
@@ -17,6 +17,7 @@ import style from "./PasswordRecovering.module.css";
 export const PasswordRecovering: React.FC = () => {
   const status = useAppSelector((state) => state.app.status);
   const successRecovery = useAppSelector((state) => state.recoveryPass.success);
+  const navigate = useNavigate();
   const dispatch = useAppDispatch();
 
   type FormikErrorType = {
@@ -84,6 +85,9 @@ export const PasswordRecovering: React.FC = () => {
                   variant={"contained"}
                   color={"primary"}
                   style={{ marginTop: "100px" }}
+                  disabled={
+                    status === "loading" || formik.errors.email ? true : false
+                  }
                 >
                   Send instructions
                 </Button>
@@ -94,7 +98,13 @@ export const PasswordRecovering: React.FC = () => {
         <span className={style.description}>
           Did you remember your password?
         </span>
-        <Link className={style.tryLogin}>Try loggin in</Link>
+        <Link
+          className={style.tryLogin}
+          onClick={() => navigate("/Login")}
+          style={{ cursor: "pointer" }}
+        >
+          Try loggin in
+        </Link>
       </Grid>
     </>
   );

@@ -84,6 +84,11 @@ export const NewPassword = () => {
                   variant={"contained"}
                   color={"primary"}
                   style={{ marginTop: "100px" }}
+                  disabled={
+                    status === "loading" || formik.errors.password
+                      ? true
+                      : false
+                  }
                 >
                   Create new password
                 </Button>
