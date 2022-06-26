@@ -10,9 +10,15 @@ import { useSelector } from "react-redux";
 import { useDispatch } from "react-redux";
 import { composeWithDevTools } from "redux-devtools-extension";
 import { authReducer } from "./reducers/auth-reducer";
+import {registerReducer} from './reducers/register-reducer';
+import {appReducer} from './reducers/app-reducer';
 
 let rootReducer = combineReducers({
   authirization: authReducer,
+  registration:registerReducer,
+  auth: authReducer,
+  app: appReducer,
+
 });
 
 export const store = createStore(
@@ -26,12 +32,12 @@ export const useAppSelector: TypedUseSelectorHook<AppRootStateType> =
   useSelector;
 
 // DISPATCH TYPE & DISPATCH
-export type useAppDispatch = ThunkDispatch<
+export type useAppDispatchType = ThunkDispatch<
   AppRootStateType,
   unknown,
   AnyAction
 >;
-export const useAppDispatch = () => useDispatch<useAppDispatch>();
+export const useAppDispatch = () => useDispatch<useAppDispatchType>();
 
 // THUNK TYPE
 export type AppThunk<ReturnType = void> = ThunkAction<

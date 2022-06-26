@@ -15,6 +15,10 @@ export const authAPI = {
 
 // ==== REGISTRATION ====
 
-export const registrationAPI = {};
+export const registrationAPI = {
+  createUser(email:string, password:string) {
+    return instance.post(`auth/register`, {email, password})
+  }
+};
 
 // ==== TYPES ====

@@ -7,10 +7,12 @@ import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import style from './Registration.module.css'
 import {useFormik} from 'formik';
-import {useDispatch, useSelector} from 'react-redux';
-// import {loginTC} from './auth-reducer';
 import {Navigate} from 'react-router-dom'
-// import {AppRootStateType} from '../../app/store';
+import { registerTC } from '../../../../m2-bll/reducers/register-reducer';
+import {AppRootStateType, useAppDispatch} from '../../../../m2-bll/store';
+import {PATH} from '../../../routes/RoutesConstants';
+import {useSelector} from 'react-redux';
+import {ErrorSnackbar} from '../../../../common/с4-errorSnackbar/ErrorSnackbar';
 
 type FormikErrorType = {
     email?: string
@@ -19,8 +21,8 @@ type FormikErrorType = {
 }
 
 export const Registration = () => {
-    // const dispatch = useDispatch()
-    // const isLoggedIn = useSelector<AppRootStateType, boolean>(state=>state.auth.isLoggedIn)
+    const dispatch = useAppDispatch()
+    const isRegistered = useSelector<AppRootStateType, boolean>(state=>state.registration.isRegistered)
 
     const formik = useFormik({
         initialValues: {
@@ -31,32 +33,33 @@ export const Registration = () => {
         validate: (values) => {
             const errors: FormikErrorType = {};
             if (!values.email) {
-                errors.email = 'Required';
+                errors.email = '';
             } else if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(values.email)) {
                 errors.email = 'Invalid email address';
             }
             if (!values.password) {
-                errors.password = 'Required';
-            } else if (values.password.length < 6) {
+                errors.password = '';
+            } else if (values.password.length <= 7) {
                 errors.password = 'Invalid password';
             }
             if (!values.confirmPassword) {
-                errors.confirmPassword = 'Required';
-            } else if (values.confirmPassword.length < 6) {
-                errors.confirmPassword = 'Invalid password';
+                errors.confirmPassword = '';
+            } else if (values.confirmPassword !== values.password) {
+                errors.confirmPassword = 'Invalid confirm password';
             }
             return errors;
         },
 
         onSubmit: values => {
-            alert(JSON.stringify(values, null, 2))
-            // dispatch(registerTC(values));
+            if(values.password ===values.confirmPassword) {
+                dispatch(registerTC(values.email, values.password));
+            }
             formik.resetForm()
         },
     });
-    // if(isLoggedIn) {
-    //     return <Navigate to='/'/>
-    // }
+    if(isRegistered) {
+        return <Navigate to={PATH.LOGIN}/>
+    }
 
     return <Grid container justifyContent={'center'}>
         <Grid item justifyContent={'center'}>
