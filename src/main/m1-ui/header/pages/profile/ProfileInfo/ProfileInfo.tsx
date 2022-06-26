@@ -1,5 +1,4 @@
 import React from "react";
-import { Button } from "@mui/material";
 import LogoutIcon from "@mui/icons-material/Logout";
 import { useSelector } from "react-redux";
 import defaultImage from "../../../../../assets/img/def-avatar.png";
@@ -15,7 +14,7 @@ import { logoutTC } from "../../../../../m2-bll/reducers/auth-reducer";
 // };
 
 export const ProfileInfo: React.FC = () => {
-  const profileImage = useSelector((state) => state);
+  // const profileImage = useSelector((state) => state);
 
   const dispatch = useAppDispatch();
 
@@ -35,7 +34,7 @@ export const ProfileInfo: React.FC = () => {
         <ul className={classes.userList}>
           <li className={classes.userItem}>Name:{}</li>
           <li className={classes.userItem}>Email:{}</li>
-          <li className={classes.userItem}>Number of cards{}</li>
+          <li className={classes.userItem}>Number of cards:{}</li>
         </ul>
       </div>
     </div>

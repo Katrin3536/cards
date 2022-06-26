@@ -1,14 +1,22 @@
-import {Button, Checkbox, Container, FormControl, FormControlLabel, FormGroup, FormLabel, Grid, TextField} from '@mui/material';
-import React from 'react';
-import style from './Login.module.css'
-import {useFormik} from "formik";
-import {PATH} from "../../../routes/RoutesConstants";
-import {NavLink} from "react-router-dom";
-
-
+import {
+  Button,
+  Container,
+  FormControl,
+  FormGroup,
+  FormLabel,
+  Grid,
+  TextField,
+} from "@mui/material";
+import React from "react";
+import style from "./Login.module.css";
+import { useFormik } from "formik";
+import { PATH } from "../../../routes/RoutesConstants";
+import { NavLink } from "react-router-dom";
+import { loginTC } from "../../../../m2-bll/reducers/auth-reducer";
+import { useAppDispatch } from "../../../../m2-bll/store";
 
 export const Login = () => {
-
+    const dispatch = useAppDispatch();
     const formik = useFormik({
         validate: (value) => {
             if (!value.password) {
@@ -30,10 +38,11 @@ export const Login = () => {
         initialValues: {
             email: '',
             password: '',
-            rememberMe: false
+            // rememberMe: false
         },
         onSubmit: values => {
             alert(JSON.stringify(values));
+            dispatch(loginTC());
         },
     });
 
@@ -64,13 +73,13 @@ export const Login = () => {
                                         {...formik.getFieldProps('password')}
                                     />
                                     {formik.errors.password ? <div>{formik.errors.password}</div> : null}
-                                    <FormControlLabel
+{/*                                    <FormControlLabel
                                         label={'Remember me'}
                                         control={<Checkbox
                                             checked={formik.values.rememberMe}
                                             {...formik.getFieldProps('rememberMe')}
                                         />}
-                                    />
+                                    />*/}
                                     <Button type={'submit'} variant={'contained'} color={'primary'}>
                                         Login
                                     </Button>
@@ -98,6 +107,8 @@ export const Login = () => {
         </div>
     );
 }
+
+export default Login;
 
 
 

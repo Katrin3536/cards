@@ -1,3 +1,7 @@
+import { AxiosError } from "axios";
+import { AnyAction, Dispatch } from "redux";
+import { authAPI } from "../../m3-dal/api/api";
+
 export type RequestStatusType = "idle" | "loading" | "succeeded" | "failed";
 
 //loadind => preloader visible
@@ -52,6 +56,24 @@ export const appSetStatusAC = (status: RequestStatusType) =>
 
 export const appSetErrorAC = (error: null | string) =>
   ({ type: APP_SET_ERROR, error } as const);
+
+// ==== THUNKS =====
+
+export const initializeAppTC = () => (dispatch: Dispatch<AnyAction>) => {
+  dispatch(appSetStatusAC("loading"));
+  authAPI
+    .authMe()
+    .then((response) => {
+      dispatch(initializeAppAC());
+      // if (response.data.resultCode === 0) {
+      //   dispatch(authMeAC());
+      // }
+    })
+    .catch((err: AxiosError) => {
+      dispatch(appSetErrorAC(err.message));
+    })
+    .finally(() => dispatch(appSetStatusAC("idle")));
+};
 
 // ==== TYPES ====
 
