@@ -5,7 +5,9 @@ import {useFormik} from "formik";
 import {PATH} from "../../../routes/RoutesConstants";
 import {NavLink} from "react-router-dom";
 
-function Login() {
+
+
+export const Login = () => {
 
     const formik = useFormik({
         validate: (value) => {
@@ -28,7 +30,7 @@ function Login() {
         initialValues: {
             email: '',
             password: '',
-            /*rememberMe: false*/
+            rememberMe: false
         },
         onSubmit: values => {
             alert(JSON.stringify(values));
@@ -62,13 +64,13 @@ function Login() {
                                         {...formik.getFieldProps('password')}
                                     />
                                     {formik.errors.password ? <div>{formik.errors.password}</div> : null}
-{/*                                    <FormControlLabel
+                                    <FormControlLabel
                                         label={'Remember me'}
                                         control={<Checkbox
                                             checked={formik.values.rememberMe}
                                             {...formik.getFieldProps('rememberMe')}
                                         />}
-                                    />*/}
+                                    />
                                     <Button type={'submit'} variant={'contained'} color={'primary'}>
                                         Login
                                     </Button>
@@ -97,4 +99,8 @@ function Login() {
     );
 }
 
-export default Login;
+
+
+
+
+
