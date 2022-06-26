@@ -1,7 +1,6 @@
 import {Dispatch} from 'redux';
 import {registrationAPI} from '../../m3-dal/api/api';
 import {appSetErrorAC, appSetStatusAC} from './app-reducer';
-import {AxiosError, AxiosResponse} from 'axios';
 
 const initialState = {
     email: '',

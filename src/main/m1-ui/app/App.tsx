@@ -15,14 +15,12 @@ export const App: React.FC = () => {
     dispatch(initializeAppTC());
   }, []);
 
-  if (!isInitialized) {
-    return <div>
-        <Header />
-        <Login />;
-    </div>
-
-
-  }
+  // if (!isInitialized) {
+  //   return <div>
+  //       <Header />
+  //       <Login />;
+  //   </div>
+  // }
 
   return (
     <div className="App">
