@@ -1,4 +1,4 @@
-import axios, { AxiosResponse } from "axios";
+import axios from "axios";
 
 export const instance = axios.create({
   baseURL: process.env.REACT_APP_BACK_URL || "http://localhost:7542/2.0/",
@@ -8,6 +8,20 @@ export const instance = axios.create({
 // ==== AUTHORIZATION ====
 
 export const authAPI = {
+  authMe() {
+    return instance.post(`auth/me`, {}).then((response) => response.data);
+  },
+
+  login() {
+    return instance
+      .post(`auth/login`, {
+        email: "maxpredko@gmail.com",
+        password: "123456789",
+        rememberMe: false,
+      })
+      .then((response) => response.data);
+  },
+
   logout() {
     return instance.delete(`auth/me`).then((response) => response.data);
   },

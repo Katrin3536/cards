@@ -1,18 +1,20 @@
-import React from 'react';
-import ReactDOM from 'react-dom/client';
-import { Provider } from 'react-redux';
-import './index.css';
-import App from './main/m1-ui/app/App';
-import { store } from './main/m2-bll/store';
-import reportWebVitals from './reportWebVitals';
+import React from "react";
+import ReactDOM from "react-dom/client";
+import { Provider } from "react-redux";
+import { HashRouter } from "react-router-dom";
+import "./index.css";
+import { App } from "./main/m1-ui/app/App";
+import { store } from "./main/m2-bll/store";
+import reportWebVitals from "./reportWebVitals";
 
-const root = ReactDOM.createRoot(document.getElementById('root'));
+const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
+  <HashRouter>
   <Provider store={store}>
-          <App/>
+    <App />
   </Provider>
+  </HashRouter>
+
 );
-
-
 
 reportWebVitals();
