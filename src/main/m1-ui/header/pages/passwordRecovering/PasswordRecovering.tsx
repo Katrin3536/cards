@@ -1,3 +1,4 @@
+import React, { useState } from "react";
 import {
   Button,
   FormControl,
@@ -8,13 +9,14 @@ import {
   TextField,
 } from "@mui/material";
 import { useFormik } from "formik";
-import React from "react";
 import { Navigate, useNavigate } from "react-router-dom";
 import { forgotPassTC } from "../../../../m2-bll/reducers/forgotPass-reducer";
 import { useAppDispatch, useAppSelector } from "../../../../m2-bll/store";
 import style from "./PasswordRecovering.module.css";
 
 export const PasswordRecovering: React.FC = () => {
+  const [email, setEmail] = useState("");
+
   const status = useAppSelector((state) => state.app.status);
   const successRecovery = useAppSelector((state) => state.recoveryPass.success);
   const navigate = useNavigate();
@@ -44,12 +46,13 @@ export const PasswordRecovering: React.FC = () => {
 
     onSubmit: (values) => {
       formik.resetForm();
+      setEmail(values.email); // для передачи в компоненту CheckEmail
       dispatch(forgotPassTC(values.email));
     },
   });
 
   if (successRecovery) {
-    return <Navigate to="/check-email" />;
+    return <Navigate to="/check-email" replace={true} state={email} />;
   }
 
   return (
@@ -100,7 +103,7 @@ export const PasswordRecovering: React.FC = () => {
         </span>
         <Link
           className={style.tryLogin}
-          onClick={() => navigate("/Login")}
+          onClick={() => navigate("/Login", { replace: true })}
           style={{ cursor: "pointer" }}
         >
           Try loggin in

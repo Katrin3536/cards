@@ -36,11 +36,10 @@ export const NewPassword = () => {
 
       if (!values.password) {
         errors.password = "Required";
-      } else if (values.password.length <= 2) {
-        errors.password = "Invalid values => less then 3 symbols";
-
-        return errors;
+      } else if (values.password.length <= 8) {
+        errors.password = "Invalid values => less then  symbols";
       }
+      return errors;
     },
 
     onSubmit: (values) => {
@@ -50,12 +49,12 @@ export const NewPassword = () => {
   });
 
   if (passIsChanged) {
-    return <Navigate to="/Profile" />;
+    return <Navigate to="/Login" />;
   }
 
   return (
     <>
-      {status === "loading" && <LinearProgress />}{" "}
+      {status === "loading" && <LinearProgress />}
       <div className={style.newPassword}>
         <h3 className={style.title}>it-incubator</h3>
         <h3 className={style.subtitle}>Create new password</h3>
