@@ -1,10 +1,14 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   Button,
   FormControl,
   FormGroup,
   Grid,
+  IconButton,
+  InputAdornment,
+  InputLabel,
   LinearProgress,
+  OutlinedInput,
   TextField,
 } from "@mui/material";
 import { useFormik } from "formik";
@@ -12,8 +16,10 @@ import { useAppDispatch, useAppSelector } from "../../../../m2-bll/store";
 import style from "./NewPassword.module.css";
 import { Navigate, useParams } from "react-router-dom";
 import { createNewPassTC } from "../../../../m2-bll/reducers/forgotPass-reducer";
+import { Visibility, VisibilityOff } from "@mui/icons-material";
 
 export const NewPassword = () => {
+  const [showPassword, setShowPassword] = useState<boolean>(false);
   const status = useAppSelector((state) => state.app.status);
   const passIsChanged = useAppSelector(
     (state) => state.recoveryPass.passIsChanged
@@ -37,7 +43,7 @@ export const NewPassword = () => {
       if (!values.password) {
         errors.password = "Required";
       } else if (values.password.length <= 8) {
-        errors.password = "Invalid values => less then  symbols";
+        errors.password = "Invalid values => less then 8 symbols";
       }
       return errors;
     },
@@ -47,6 +53,16 @@ export const NewPassword = () => {
       dispatch(createNewPassTC(values.password, token.token));
     },
   });
+
+  const handleClickShowPassword = () => {
+    setShowPassword(!showPassword);
+  };
+
+  const handleMouseDownPassword = (
+    event: React.MouseEvent<HTMLButtonElement>
+  ) => {
+    event.preventDefault();
+  };
 
   if (passIsChanged) {
     return <Navigate to="/Login" />;
@@ -66,9 +82,24 @@ export const NewPassword = () => {
           <form onSubmit={formik.handleSubmit}>
             <FormControl>
               <FormGroup>
-                <TextField
+                <InputLabel htmlFor="outlined-adornment-password">
+                  Password
+                </InputLabel>
+                <OutlinedInput
                   label="Password"
-                  margin="normal"
+                  type={showPassword ? "text" : "password"}
+                  endAdornment={
+                    <InputAdornment position="end">
+                      <IconButton
+                        aria-label="toggle password visibility"
+                        onClick={handleClickShowPassword}
+                        onMouseDown={handleMouseDownPassword}
+                        edge="end"
+                      >
+                        {showPassword ? <VisibilityOff /> : <Visibility />}
+                      </IconButton>
+                    </InputAdornment>
+                  }
                   {...formik.getFieldProps("password")}
                 />
                 {formik.touched.password && formik.errors.password ? (

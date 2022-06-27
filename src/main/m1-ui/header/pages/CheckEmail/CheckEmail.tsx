@@ -20,7 +20,9 @@ export const CheckEmail: React.FC = () => {
       <span className={style.description}>
         We've sent an Email with instructions to
         <a href={`https://${email}`} target="blanc">
-          <span style={{ color: "blue" }}>{" " + email}</span>
+          <span style={{ color: "blue" }}>
+            {email ? " " + email : " example@google.com"}
+          </span>
         </a>
       </span>
     </div>
