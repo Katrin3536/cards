@@ -1,22 +1,23 @@
 import {
-  Button,
-  Container,
-  FormControl,
-  FormGroup,
-  FormLabel,
-  Grid,
-  TextField,
-} from "@mui/material";
+    Button,
+    Container,
+    FormControl,
+    FormGroup,
+    FormLabel,
+    Grid, Link,
+    TextField,
+} from '@mui/material';
 import React from "react";
 import style from "./Login.module.css";
 import { useFormik } from "formik";
 import { PATH } from "../../../routes/RoutesConstants";
-import { NavLink } from "react-router-dom";
+import { useNavigate} from 'react-router-dom';
 import { loginTC } from "../../../../m2-bll/reducers/auth-reducer";
 import { useAppDispatch } from "../../../../m2-bll/store";
 
 export const Login = () => {
     const dispatch = useAppDispatch();
+    const navigate = useNavigate();
     const formik = useFormik({
         validate: (value) => {
             if (!value.password) {
@@ -84,7 +85,12 @@ export const Login = () => {
                                         Login
                                     </Button>
                                     <p>Don`t have an account?</p>
-                                        <NavLink to={PATH.REGISTRATION}>Sign Up</NavLink>
+                                    <Link
+                                        onClick={() => navigate(PATH.REGISTRATION)}
+                                        style={{ cursor: "pointer" }}
+                                    >
+                                        Sign Up
+                                    </Link>
                                 </FormGroup>
                             </FormLabel>
                         </FormControl>
