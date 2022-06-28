@@ -49,6 +49,7 @@ export const forgotPassTC =
     forgotPassAPI
       .forgot(email)
       .then((response) => {
+        console.log(response);
         if (response.data.success) {
           dispatch(forgotPassAC());
         }

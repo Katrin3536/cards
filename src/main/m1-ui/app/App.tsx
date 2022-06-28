@@ -5,7 +5,7 @@ import "./App.css";
 import { useAppDispatch, useAppSelector } from "../../m2-bll/store";
 import Login from "../header/pages/login/Login";
 import { initializeAppTC } from "../../m2-bll/reducers/app-reducer";
-import {ErrorSnackbar} from '../../common/с4-errorSnackbar/ErrorSnackbar';
+import { ErrorSnackbar } from "../../common/с4-errorSnackbar/ErrorSnackbar";
 
 export const App: React.FC = () => {
   const isInitialized = useAppSelector((state) => state.app.isInitializeApp);
@@ -24,7 +24,7 @@ export const App: React.FC = () => {
 
   return (
     <div className="App">
-      <ErrorSnackbar/>
+      <ErrorSnackbar />
       <Header />
       <RoutesConstants />
       {/*<Main/>*/}
