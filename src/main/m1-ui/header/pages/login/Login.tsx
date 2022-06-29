@@ -1,123 +1,195 @@
-import {
-    Button,
-    Container,
-    FormControl,
-    FormGroup,
-    FormLabel,
-    Grid, Link,
-    TextField,
-} from '@mui/material';
-import React from "react";
-import style from "./Login.module.css";
+import React, { useState } from "react";
 import { useFormik } from "formik";
 import { PATH } from "../../../routes/RoutesConstants";
-import { useNavigate} from 'react-router-dom';
+import { useNavigate } from "react-router-dom";
 import { loginTC } from "../../../../m2-bll/reducers/auth-reducer";
-import { useAppDispatch } from "../../../../m2-bll/store";
+import { useAppDispatch, useAppSelector } from "../../../../m2-bll/store";
+import Grid from "@mui/material/Grid";
+import FormControl from "@mui/material/FormControl";
+import FormGroup from "@mui/material/FormGroup";
+import Button from "@mui/material/Button";
+import InputLabel from "@mui/material/InputLabel";
+import LinearProgress from "@mui/material/LinearProgress";
+import Link from "@mui/material/Link";
+import OutlinedInput from "@mui/material/OutlinedInput";
+import Visibility from "@mui/icons-material/Visibility";
+import VisibilityOff from "@mui/icons-material/VisibilityOff";
+import IconButton from "@mui/material/IconButton";
+import InputAdornment from "@mui/material/InputAdornment";
+import FormControlLabel from "@mui/material/FormControlLabel";
+import Checkbox from "@mui/material/Checkbox";
+import style from "./Login.module.css";
+import commonStyle from "../../../../assets/styles/Common.module.css";
+
+type FormikErrorType = {
+  email?: string;
+  password?: string;
+  rememberMe?: boolean;
+};
 
 export const Login = () => {
-    const dispatch = useAppDispatch();
-    const navigate = useNavigate();
-    const formik = useFormik({
-        validate: (value) => {
-            if (!value.password) {
-                return {
-                    password: 'Password is required'
-                }
-            }
-            if (value.password.length <= 5) {
-                return {
-                    password: 'Password should be > 5'
-                }
-            }
-            if (!value.email) {
-                return {
-                    email: 'Email is required'
-                }
-            }
-        },
-        initialValues: {
-            email: '',
-            password: '',
-            // rememberMe: false
-        },
-        onSubmit: values => {
-            alert(JSON.stringify(values));
-            dispatch(loginTC());
-        },
-    });
+  const [showPassword, setShowPassword] = useState<boolean>(false);
+  const navigate = useNavigate();
+  const status = useAppSelector((state) => state.app.status);
+  const isLoggedIn = useAppSelector((state) => state.authirization.isLoggedIn);
+  const dispatch = useAppDispatch();
 
-    return (
-        <div className={style.loginContainer}>
-            <Container fixed>
-                <Grid container justifyContent={'center'}>
-                    <form onSubmit={formik.handleSubmit}>
-                        <FormControl>
-                            <FormLabel>
-                                <FormLabel>
-                                    <h1>IT-INCUBATOR</h1>
-                                    <h2>Sign in</h2>
-                                    <p>Email: free@samuraijs.com</p>
-                                    <p>Password: free</p>
-                                </FormLabel>
-                                <FormGroup>
-                                    <TextField
-                                        label="Email"
-                                        margin="normal"
-                                        {...formik.getFieldProps('email')}
-                                    />
-                                    {formik.errors.email ? <div>{formik.errors.email}</div> : null}
-                                    <TextField
-                                        type="password"
-                                        label="Password"
-                                        margin="normal"
-                                        {...formik.getFieldProps('password')}
-                                    />
-                                    {formik.errors.password ? <div>{formik.errors.password}</div> : null}
-{/*                                    <FormControlLabel
-                                        label={'Remember me'}
-                                        control={<Checkbox
-                                            checked={formik.values.rememberMe}
-                                            {...formik.getFieldProps('rememberMe')}
-                                        />}
-                                    />*/}
-                                    <Button type={'submit'} variant={'contained'} color={'primary'}>
-                                        Login
-                                    </Button>
-                                    <p>Don`t have an account?</p>
-                                    <Link
-                                        onClick={() => navigate(PATH.REGISTRATION)}
-                                        style={{ cursor: "pointer" }}
-                                    >
-                                        Sign Up
-                                    </Link>
-                                </FormGroup>
-                            </FormLabel>
-                        </FormControl>
-                    </form>
-                </Grid>
-                {/*<Routes>
-                    <Route path="/" element={<TodolistsList demo={demo}/>} />
-                    <Route path="/login" element={<Login />} />
+  const formik = useFormik({
+    initialValues: {
+      email: "",
+      password: "",
+      rememberMe: false,
+    },
 
-                    <Route path="*" element={<h1>404 ERROR</h1>} />
-                    <Route path="/404" element={<Navigate to={'/404'} />} />
-                </Routes>*/}
+    validate: (values) => {
+      const errors: FormikErrorType = {};
 
-                {/*<SpacingGrid />*/}
+      if (!values.email) {
+        errors.email = "Required";
+      } else if (
+        !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(values.email)
+      ) {
+        errors.email = "Invalid email address";
+      }
 
+      if (!values.password) {
+        errors.password = "Required";
+      } else if (values.password.length <= 6) {
+        errors.password = "Password less then 7 symbols";
+      }
 
+      return errors;
+    },
 
+    onSubmit: (values) => {
+      //   alert(JSON.stringify({ email, password, rememberMe }));
+      dispatch(loginTC(values));
+      //   formik.resetForm();
+    },
+  });
 
-            </Container>
+  const handleClickShowPassword = () => {
+    setShowPassword(!showPassword);
+  };
+
+  const handleMouseDownPassword = (
+    event: React.MouseEvent<HTMLButtonElement>
+  ) => {
+    event.preventDefault();
+  };
+
+  const disableBtn =
+    status === "loading" ||
+    Object.keys(formik.errors).length !== 0 ||
+    Object.values(formik.values.email).length === 0 ||
+    Object.values(formik.values.password).length === 0;
+
+  if (isLoggedIn) {
+    return <>{navigate(PATH.PROFILE)}</>;
+  }
+
+  return (
+    <>
+      {status === "loading" && <LinearProgress />}
+      <Grid
+        container
+        justifyContent={"center"}
+        className={commonStyle.container}
+      >
+        <div className={style.heading}>
+          <h2 className={commonStyle.title}>Training cards</h2>
+          <h3 className={commonStyle.subtitle}>Sign in</h3>
+          {/* <span>Email: free@samuraijs.com</span>
+          <br />
+          <span>Password: free</span> */}
         </div>
-    );
-}
-
-export default Login;
-
-
-
-
-
-
+        <form onSubmit={formik.handleSubmit} className={commonStyle.form}>
+          <FormGroup>
+            <FormControl sx={{ m: 1, width: "250px" }} variant="outlined">
+              <InputLabel htmlFor="outlined-adornment-email">Email</InputLabel>
+              <OutlinedInput
+                placeholder={"Enter email"}
+                id="outlined-adornment-email"
+                name="email"
+                value={formik.values.email}
+                onChange={formik.handleChange}
+                label="Email"
+              />
+              {formik.touched.email && formik.errors.email ? (
+                <div style={{ color: "red" }}>{formik.errors.email}</div>
+              ) : null}
+            </FormControl>
+            <FormControl sx={{ m: 1, width: "250px" }} variant="outlined">
+              <InputLabel htmlFor="outlined-adornment-password">
+                Password
+              </InputLabel>
+              <OutlinedInput
+                placeholder={"Enter password"}
+                id="outlined-adornment-password"
+                name={"password"}
+                type={showPassword ? "text" : "password"}
+                value={formik.values.password}
+                onChange={formik.handleChange}
+                endAdornment={
+                  <InputAdornment position="end">
+                    <IconButton
+                      aria-label="toggle password visibility"
+                      onClick={handleClickShowPassword}
+                      onMouseDown={handleMouseDownPassword}
+                      edge="end"
+                    >
+                      {showPassword ? <VisibilityOff /> : <Visibility />}
+                    </IconButton>
+                  </InputAdornment>
+                }
+                label="Password"
+              />
+              {formik.touched.password && formik.errors.password ? (
+                <div style={{ color: "red" }}>{formik.errors.password}</div>
+              ) : null}
+            </FormControl>
+            <FormControlLabel
+              label={"Remember me"}
+              control={
+                <Checkbox
+                  value={formik.values.rememberMe}
+                  //    {...formik.getFieldProps("rememberMe")}
+                />
+              }
+              style={{ paddingLeft: "10px", marginBottom: "20px" }}
+            />
+            <Link
+              onClick={() => navigate(PATH.PASSWORD_RECOVERING)}
+              style={{
+                cursor: "pointer",
+                textAlign: "right",
+                marginBottom: "30px",
+              }}
+            >
+              Forgot password
+            </Link>
+            <Button
+              type={"submit"}
+              variant={"contained"}
+              style={{ width: "60%", margin: "auto" }}
+              color={"primary"}
+              disabled={disableBtn}
+            >
+              Login
+            </Button>
+            <span className={commonStyle.description}>
+              Don`t have an account?
+            </span>
+            <Link
+              onClick={() => navigate(PATH.REGISTRATION)}
+              style={{ cursor: "pointer" }}
+              className={commonStyle.bottomRedirect}
+            >
+              Sign Up
+            </Link>
+          </FormGroup>
+        </form>
+      </Grid>
+    </>
+  );
+};

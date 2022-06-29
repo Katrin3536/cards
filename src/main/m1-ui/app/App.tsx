@@ -3,7 +3,7 @@ import Header from "../header/Header";
 import RoutesConstants from "../routes/RoutesConstants";
 import "./App.css";
 import { useAppDispatch, useAppSelector } from "../../m2-bll/store";
-import Login from "../header/pages/login/Login";
+import { Login } from "../header/pages/login/Login";
 import { initializeAppTC } from "../../m2-bll/reducers/app-reducer";
 import { ErrorSnackbar } from "../../common/с4-errorSnackbar/ErrorSnackbar";
 
@@ -15,12 +15,14 @@ export const App: React.FC = () => {
     dispatch(initializeAppTC());
   }, []);
 
-  // if (!isInitialized) {
-  //   return <div>
-  //       <Header />
-  //       <Login />;
-  //   </div>
-  // }
+  if (!isInitialized) {
+    return (
+      <div>
+        <Header />
+        <Login />;
+      </div>
+    );
+  }
 
   return (
     <div className="App">

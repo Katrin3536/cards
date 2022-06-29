@@ -10,13 +10,13 @@ import { NewPassword } from "../header/pages/newPassword/NewPassword";
 import { Login } from "../header/pages/login/Login";
 
 export const PATH = {
-  LOGIN: "/Login",
-  REGISTRATION: "/Registration",
-  PROFILE: "/Profile",
-  ERROR404: "/Error404",
-  PASSWORD_RECOVERING: "/PasswordRecovering",
+  LOGIN: "/login",
+  REGISTRATION: "/registration",
+  PROFILE: "/profile",
+  ERROR404: "/error404",
+  PASSWORD_RECOVERING: "/password-recovery",
   NEW_PASSWORD: "/set-new-password/:token",
-  TEST_PAGE: "/TestPage",
+  TEST_PAGE: "/testPage",
   CHECK_EMAIL: "/check-email",
 };
 

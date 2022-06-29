@@ -10,14 +10,13 @@ import { useSelector } from "react-redux";
 import { useDispatch } from "react-redux";
 import { composeWithDevTools } from "redux-devtools-extension";
 import { authReducer } from "./reducers/auth-reducer";
-import {registerReducer} from './reducers/register-reducer';
-import {appReducer} from './reducers/app-reducer';
+import { registerReducer } from "./reducers/register-reducer";
+import { appReducer } from "./reducers/app-reducer";
 import { forgotReducer } from "./reducers/forgotPass-reducer";
 
 let rootReducer = combineReducers({
   authirization: authReducer,
-  registration:registerReducer,
-  auth: authReducer,
+  registration: registerReducer,
   app: appReducer,
 
   recoveryPass: forgotReducer,

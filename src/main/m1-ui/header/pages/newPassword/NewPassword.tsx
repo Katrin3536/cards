@@ -9,7 +9,6 @@ import {
   InputLabel,
   LinearProgress,
   OutlinedInput,
-  TextField,
 } from "@mui/material";
 import { useFormik } from "formik";
 import { useAppDispatch, useAppSelector } from "../../../../m2-bll/store";
@@ -72,7 +71,7 @@ export const NewPassword = () => {
     <>
       {status === "loading" && <LinearProgress />}
       <div className={style.newPassword}>
-        <h3 className={style.title}>it-incubator</h3>
+        <h3 className={style.title}>Cards</h3>
         <h3 className={style.subtitle}>Create new password</h3>
         <Grid
           item

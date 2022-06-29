@@ -1,18 +1,19 @@
 import React, { useState } from "react";
-import {
-  Button,
-  FormControl,
-  FormGroup,
-  Grid,
-  LinearProgress,
-  Link,
-  TextField,
-} from "@mui/material";
 import { useFormik } from "formik";
+import { PATH } from "../../../routes/RoutesConstants";
 import { Navigate, useNavigate } from "react-router-dom";
 import { forgotPassTC } from "../../../../m2-bll/reducers/forgotPass-reducer";
 import { useAppDispatch, useAppSelector } from "../../../../m2-bll/store";
+import Grid from "@mui/material/Grid";
+import FormControl from "@mui/material/FormControl";
+import FormGroup from "@mui/material/FormGroup";
+import Button from "@mui/material/Button";
+import InputLabel from "@mui/material/InputLabel";
+import LinearProgress from "@mui/material/LinearProgress";
+import Link from "@mui/material/Link";
+import OutlinedInput from "@mui/material/OutlinedInput";
 import style from "./PasswordRecovering.module.css";
+import commonStyle from "../../../../assets/styles/Common.module.css";
 
 export const PasswordRecovering: React.FC = () => {
   const [email, setEmail] = useState("");
@@ -51,8 +52,20 @@ export const PasswordRecovering: React.FC = () => {
     },
   });
 
+  // console.log(
+  //   "key",
+  //   Object.keys(formik.errors).length,
+  //   "val",
+  //   Object.values(formik.values.email).length
+  // );
+
+  const disableBtn =
+    status === "loading" ||
+    Object.keys(formik.errors).length !== 0 ||
+    Object.values(formik.values.email).length === 0;
+
   if (successRecovery) {
-    return <Navigate to="/check-email" replace={true} state={email} />;
+    return <>{navigate(PATH.PASSWORD_RECOVERING, { state: email })}</>;
   }
 
   return (
@@ -61,53 +74,53 @@ export const PasswordRecovering: React.FC = () => {
       <Grid
         container
         justifyContent={"center"}
-        direction={"column"}
-        className={style.passwordRecovering}
+        className={commonStyle.container}
       >
-        <h3 className={style.title}>it-incubator</h3>
-        <h3 className={style.subtitle}>Forgot your password?</h3>
-        <Grid
-          item
-          justifyContent={"center"}
-          style={{ marginTop: "30px", maxWidth: "260px", marginBottom: "68px" }}
-        >
-          <form onSubmit={formik.handleSubmit}>
-            <FormControl>
-              <FormGroup>
-                <TextField
-                  label="Email"
-                  margin="normal"
-                  {...formik.getFieldProps("email")}
-                />
-                {formik.touched.email && formik.errors.email ? (
-                  <div style={{ color: "red" }}>{formik.errors.email}</div>
-                ) : null}
-
-                <Button
-                  type={"submit"}
-                  variant={"contained"}
-                  color={"primary"}
-                  style={{ marginTop: "100px" }}
-                  disabled={
-                    status === "loading" || formik.errors.email ? true : false
-                  }
-                >
-                  Send instructions
-                </Button>
-              </FormGroup>
+        <div className={style.heading}>
+          <h2 className={commonStyle.title}>Training cards</h2>
+          <h3 className={commonStyle.subtitle}>Forgot your password?</h3>
+        </div>
+        <form onSubmit={formik.handleSubmit} className={commonStyle.form}>
+          <FormGroup>
+            <FormControl
+              sx={{ m: 1, width: "250px" }}
+              variant="outlined"
+              style={{ marginBottom: "100px" }}
+            >
+              <InputLabel htmlFor="outlined-adornment-email">Email</InputLabel>
+              <OutlinedInput
+                placeholder={"Enter email"}
+                id="outlined-adornment-email}"
+                name="email"
+                value={formik.values.email}
+                onChange={formik.handleChange}
+                label="Email"
+              />
+              {formik.touched.email && formik.errors.email ? (
+                <div style={{ color: "red" }}>{formik.errors.email}</div>
+              ) : null}
             </FormControl>
-          </form>
-        </Grid>
-        <span className={style.description}>
-          Did you remember your password?
-        </span>
-        <Link
-          className={style.tryLogin}
-          onClick={() => navigate("/Login", { replace: true })}
-          style={{ cursor: "pointer" }}
-        >
-          Try loggin in
-        </Link>
+            <Button
+              type={"submit"}
+              variant={"contained"}
+              color={"primary"}
+              style={{ width: "80%", margin: "auto" }}
+              disabled={disableBtn}
+            >
+              Send instructions
+            </Button>
+            <span className={commonStyle.description}>
+              Did you remember your password?
+            </span>
+            <Link
+              className={commonStyle.bottomRedirect}
+              onClick={() => navigate(PATH.LOGIN)}
+              style={{ cursor: "pointer" }}
+            >
+              Try loggin in
+            </Link>
+          </FormGroup>
+        </form>
       </Grid>
     </>
   );

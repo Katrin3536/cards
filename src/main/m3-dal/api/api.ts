@@ -1,4 +1,4 @@
-import axios from "axios";
+import axios, { AxiosResponse } from "axios";
 
 export const instance = axios.create({
   baseURL: process.env.REACT_APP_BACK_URL || "http://localhost:7542/2.0/",
@@ -13,18 +13,15 @@ export const authAPI = {
     return instance.post(`auth/me`, {}).then((response) => response.data);
   },
 
-  login() {
-    return instance
-      .post(`auth/login`, {
-        email: "maxpredko@gmail.com",
-        password: "123456789",
-        rememberMe: false,
-      })
-      .then((response) => response.data);
+  login(data: LoginParamsType) {
+    return instance.post<LoginParamsType, AxiosResponse<LoginResponseType>>(
+      "auth/login",
+      data
+    );
   },
 
   logout() {
-    return instance.delete(`auth/me`).then((response) => response.data);
+    return instance.delete<LoguotResponseType>(`auth/me`);
   },
 };
 
@@ -58,4 +55,28 @@ export const forgotPassAPI = {
     });
   },
 };
+
 // ==== TYPES ====
+
+export type LoginParamsType = {
+  email: string;
+  password: string;
+  rememberMe?: boolean;
+};
+
+export type LoginResponseType = {
+  created: string;
+  email: string;
+  isAdmin: string;
+  name: string;
+  publicCardPacksCount: number;
+  rememberMe: boolean;
+  token: string;
+  tokenDeathTime: number;
+  updated: string;
+  verified: boolean;
+  __v: number;
+  _id: string;
+};
+
+export type LoguotResponseType = { info: string };

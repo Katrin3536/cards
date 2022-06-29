@@ -1,10 +1,11 @@
 import { AxiosError } from "axios";
 import { AnyAction, Dispatch } from "redux";
-import { authAPI } from "../../m3-dal/api/api";
+import { authAPI, LoginParamsType } from "../../m3-dal/api/api";
 import { appSetErrorAC, appSetStatusAC } from "./app-reducer";
 
 const initialState = {
-  isAuth: false,
+  isLoggedIn: false,
+  isLoggedOut: "",
 };
 
 type InitialStateType = typeof initialState;
@@ -18,24 +19,17 @@ export const authReducer = (
   action: AuthActionsType
 ): InitialStateType => {
   switch (action.type) {
-    case AUTH_ME: {
-      return {
-        ...state,
-        isAuth: !state.isAuth,
-      };
-    }
-
     case LOGIN: {
       return {
         ...state,
-        isAuth: !state.isAuth,
+        isLoggedIn: !state.isLoggedIn,
       };
     }
 
     case LOGOUT: {
       return {
         ...state,
-        isAuth: !state.isAuth,
+        isLoggedOut: "success",
       };
     }
 
@@ -46,24 +40,38 @@ export const authReducer = (
 
 //actions
 
-export const authMeAC = () => ({ type: AUTH_ME } as const);
+// export const authMeAC = () => ({ type: AUTH_ME } as const);
 export const loginAC = () => ({ type: LOGIN } as const);
 export const logoutAC = () => ({ type: LOGOUT } as const);
 
 // THUNKS
 
-export const loginTC = () => (dispatch: Dispatch<AnyAction>) => {
+export const loginTC =
+  (data: LoginParamsType) => (dispatch: Dispatch<AnyAction>) => {
+    dispatch(appSetStatusAC("loading"));
+    console.log("login +");
+    authAPI
+      .login(data)
+      .then((res) => {
+        dispatch(loginAC());
+        // if (res.data.resultCode === 0) {
+        //   dispatch(loginAC());
+        // } else {
+        //   dispatch(appSetErrorAC(res.data.messages[0]));
+        // }
+      })
+      .catch((err: AxiosError) => {
+        dispatch(appSetErrorAC(err.message));
+      })
+      .finally(() => dispatch(appSetStatusAC("idle")));
+  };
+
+export const logoutTC = () => (dispatch: Dispatch<AnyAction>) => {
   dispatch(appSetStatusAC("loading"));
-  console.log("login +");
   authAPI
-    .login()
+    .logout()
     .then((res) => {
-      dispatch(loginAC());
-      // if (res.data.resultCode === 0) {
-      //   dispatch(loginAC());
-      // } else {
-      //   dispatch(appSetErrorAC(res.data.messages[0]));
-      // }
+      dispatch(logoutAC());
     })
     .catch((err: AxiosError) => {
       dispatch(appSetErrorAC(err.message));
@@ -71,27 +79,11 @@ export const loginTC = () => (dispatch: Dispatch<AnyAction>) => {
     .finally(() => dispatch(appSetStatusAC("idle")));
 };
 
-export const logoutTC = () => (dispatch: Dispatch<AnyAction>) => {
-  dispatch(appSetStatusAC("loading"));
-  authAPI
-    .logout()
-    .then((res) => {
-      console.log(res);
-      // if (res.info === "logOut success —ฅ/ᐠ.̫ .ᐟ\ฅ—") {
-      //   dispatch(logoutAC());
-      // } else {
-      // dispatch(appSetErrorAC(res.error));
-    })
-
-    // .catch((err: AxiosError) => {
-    //   dispatch(appSetErrorAC(err.message));
-    // });
-    .finally(() => dispatch(appSetStatusAC("idle")));
-};
-
 //types
 
-export type AuthMeType = ReturnType<typeof authMeAC>;
+// export type AuthMeType = ReturnType<typeof authMeAC>;
 export type LoginType = ReturnType<typeof loginAC>;
 export type LogoutType = ReturnType<typeof logoutAC>;
-export type AuthActionsType = AuthMeType | LoginType | LogoutType;
+export type AuthActionsType =
+  //  AuthMeType
+  LoginType | LogoutType;
