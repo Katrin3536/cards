@@ -1,41 +1,40 @@
-import React from "react";
+import React, { useCallback } from "react";
 import LogoutIcon from "@mui/icons-material/Logout";
 import { useSelector } from "react-redux";
 import defaultImage from "../../../../../assets/img/def-avatar.png";
 import classes from "./ProfileInfo.module.css";
-import { useAppDispatch } from "../../../../../m2-bll/store";
+import { useAppDispatch, useAppSelector } from "../../../../../m2-bll/store";
 import { logoutTC } from "../../../../../m2-bll/reducers/auth-reducer";
-
-// type ProfilePhotoPropsType = {
-//   profileImage: string;
-//   name: string;
-//   email: string;
-//   cardsNum: number;
-// };
+import { EditableSpan } from "../../../../../common/c5-EditableSpan/EditableSpan";
+import { updateUserNameTC } from "../../../../../m2-bll/reducers/profile-reducer";
 
 export const ProfileInfo: React.FC = () => {
-  // const profileImage = useSelector((state) => state);
+  const { name, email, publicCardPacksCount } = useAppSelector(
+    (state) => state.profile
+  );
 
   const dispatch = useAppDispatch();
 
-  const logoutHandler = () => {
+  const logoutHandler = useCallback(() => {
     dispatch(logoutTC());
+  }, []);
+
+  const onChangeValueHandler = (newName: string) => {
+    dispatch(updateUserNameTC(newName));
   };
 
   return (
     <div className={classes.wrapper}>
       <div className={classes.userAvatar}>
-        <div>
-          <img src={`${defaultImage}`} alt="avatar"></img>
-        </div>
-        <LogoutIcon onClick={logoutHandler} className={classes.logoutBtn} />
+        <img src={`${defaultImage}`} alt="avatar"></img>
       </div>
+      <LogoutIcon onClick={logoutHandler} className={classes.logoutBtn} />
       <div>
-        <ul className={classes.userList}>
-          <li className={classes.userItem}>Name:{}</li>
-          <li className={classes.userItem}>Email:{}</li>
-          <li className={classes.userItem}>Number of cards:{}</li>
-        </ul>
+        <EditableSpan value={name} onChange={onChangeValueHandler} />
+        <p className={classes.userItem}>email: {email}</p>
+        <span className={classes.numberCards}>
+          Cards: {publicCardPacksCount}
+        </span>
       </div>
     </div>
   );

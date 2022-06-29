@@ -1,6 +1,6 @@
 import React from "react";
 import { useAppSelector } from "../../../../m2-bll/store";
-import { useNavigate } from "react-router-dom";
+import { Navigate, useNavigate } from "react-router-dom";
 import { PATH } from "../../../routes/RoutesConstants";
 import { ProfileInfo } from "./ProfileInfo/ProfileInfo";
 import Grid from "@mui/material/Grid";
@@ -8,13 +8,15 @@ import Paper from "@mui/material/Paper";
 import style from "./Profile.module.css";
 
 const Profile: React.FC = () => {
-  const isLoggedOut = useAppSelector(
-    (state) => state.authirization.isLoggedOut
-  );
+  const isLoggedIn = useAppSelector((state) => state.authirization.isLoggedIn);
   const navigate = useNavigate();
 
-  if (isLoggedOut) {
-    return <>{navigate(PATH.LOGIN)}</>;
+  // if (isLoggedOut === "success") {
+  //   return <>{navigate(PATH.LOGIN)}</>;
+  // }
+
+  if (!isLoggedIn) {
+    return <Navigate to={PATH.LOGIN} />;
   }
 
   return (

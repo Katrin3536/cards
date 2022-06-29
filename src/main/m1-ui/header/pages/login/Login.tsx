@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useFormik } from "formik";
 import { PATH } from "../../../routes/RoutesConstants";
-import { useNavigate } from "react-router-dom";
+import { Navigate, useNavigate } from "react-router-dom";
 import { loginTC } from "../../../../m2-bll/reducers/auth-reducer";
 import { useAppDispatch, useAppSelector } from "../../../../m2-bll/store";
 import Grid from "@mui/material/Grid";
@@ -85,7 +85,7 @@ export const Login = () => {
     Object.values(formik.values.password).length === 0;
 
   if (isLoggedIn) {
-    return <>{navigate(PATH.PROFILE)}</>;
+    return <Navigate to={PATH.PROFILE} />;
   }
 
   return (

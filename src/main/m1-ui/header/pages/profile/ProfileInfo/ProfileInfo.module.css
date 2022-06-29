@@ -1,5 +1,10 @@
 .wrapper {
   position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
   padding: 10px;
 }
 
@@ -7,8 +12,7 @@
 .userAvatar {
   display: flex;
   justify-content: center;
-  width: 100%;
-  border-radius: 7px;
+  max-width: 200px;
   padding-bottom: 30px;
 }
 

@@ -13,13 +13,14 @@ import { authReducer } from "./reducers/auth-reducer";
 import { registerReducer } from "./reducers/register-reducer";
 import { appReducer } from "./reducers/app-reducer";
 import { forgotReducer } from "./reducers/forgotPass-reducer";
+import { profileReducer } from "./reducers/profile-reducer";
 
 let rootReducer = combineReducers({
   authirization: authReducer,
   registration: registerReducer,
   app: appReducer,
-
   recoveryPass: forgotReducer,
+  profile: profileReducer,
 });
 
 export const store = createStore(

@@ -1,6 +1,8 @@
 import { AxiosError } from "axios";
 import { AnyAction, Dispatch } from "redux";
 import { authAPI } from "../../m3-dal/api/api";
+import { loginAC, LoginType } from "./auth-reducer";
+import { setProfileInfoAC } from "./profile-reducer";
 
 export type RequestStatusType = "idle" | "loading" | "succeeded" | "failed";
 
@@ -27,7 +29,7 @@ export const appReducer = (
     case INITIALIZE_APP:
       return {
         ...state,
-        isInitializeApp: !state.isInitializeApp,
+        isInitializeApp: action.value,
       };
 
     case APP_SET_STATUS:
@@ -49,7 +51,8 @@ export const appReducer = (
 
 // ==== ACTIONS =====
 
-export const initializeAppAC = () => ({ type: INITIALIZE_APP } as const);
+export const initializeAppAC = (value: boolean) =>
+  ({ type: INITIALIZE_APP, value } as const);
 
 export const appSetStatusAC = (status: RequestStatusType) =>
   ({ type: APP_SET_STATUS, status } as const);
@@ -64,10 +67,9 @@ export const initializeAppTC = () => (dispatch: Dispatch<AnyAction>) => {
   authAPI
     .authMe()
     .then((response) => {
-      dispatch(initializeAppAC());
-      // if (response.data.resultCode === 0) {
-      //   dispatch(authMeAC());
-      // }
+      dispatch(loginAC(true));
+      dispatch(setProfileInfoAC(response.data));
+      dispatch(initializeAppAC(true));
     })
     .catch((err: AxiosError) => {
       dispatch(appSetErrorAC(err.message));
@@ -81,4 +83,8 @@ export type InitializeAppType = ReturnType<typeof initializeAppAC>;
 export type AppSetStatusType = ReturnType<typeof appSetStatusAC>;
 export type AppSetErrorType = ReturnType<typeof appSetErrorAC>;
 
-type AppActionsTypes = InitializeAppType | AppSetStatusType | AppSetErrorType;
+type AppActionsTypes =
+  | InitializeAppType
+  | AppSetStatusType
+  | AppSetErrorType
+  | LoginType;

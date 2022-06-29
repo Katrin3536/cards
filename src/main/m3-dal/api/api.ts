@@ -10,7 +10,9 @@ export const instance = axios.create({
 
 export const authAPI = {
   authMe() {
-    return instance.post(`auth/me`, {}).then((response) => response.data);
+    return instance.post<LoginParamsType, AxiosResponse<LoginResponseType>>(
+      `auth/me`
+    );
   },
 
   login(data: LoginParamsType) {
@@ -22,6 +24,14 @@ export const authAPI = {
 
   logout() {
     return instance.delete<LoguotResponseType>(`auth/me`);
+  },
+};
+
+// ==== PROFILE ====
+
+export const profileAPI = {
+  setName(name: string) {
+    return instance.put(`auth/me`, { name });
   },
 };
 
@@ -69,6 +79,7 @@ export type LoginResponseType = {
   email: string;
   isAdmin: string;
   name: string;
+  avatar?: string;
   publicCardPacksCount: number;
   rememberMe: boolean;
   token: string;
