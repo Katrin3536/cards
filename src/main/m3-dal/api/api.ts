@@ -33,6 +33,10 @@ export const profileAPI = {
   setName(name: string) {
     return instance.put(`auth/me`, { name });
   },
+
+  setAvatar(avatar: string) {
+    return instance.put(`auth/me`, { avatar });
+  },
 };
 
 // ==== REGISTRATION ====

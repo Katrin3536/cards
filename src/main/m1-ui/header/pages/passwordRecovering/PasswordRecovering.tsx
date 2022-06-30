@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useFormik } from "formik";
 import { PATH } from "../../../routes/RoutesConstants";
-import { Navigate, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { forgotPassTC } from "../../../../m2-bll/reducers/forgotPass-reducer";
 import { useAppDispatch, useAppSelector } from "../../../../m2-bll/store";
 import Grid from "@mui/material/Grid";
@@ -96,7 +96,7 @@ export const PasswordRecovering: React.FC = () => {
                 onChange={formik.handleChange}
                 label="Email"
               />
-              {formik.touched.email && formik.errors.email ? (
+              {formik.touched.email || formik.errors.email ? (
                 <div style={{ color: "red" }}>{formik.errors.email}</div>
               ) : null}
             </FormControl>

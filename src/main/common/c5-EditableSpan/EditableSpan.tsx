@@ -1,4 +1,6 @@
 import React, { ChangeEvent, FocusEvent, MouseEvent, useState } from "react";
+import Input from "@mui/material/Input";
+import ModeEditIcon from "@mui/icons-material/ModeEdit";
 // import classes from "./EditableSpan.module.css";
 
 type EditableSpanPropsType = {
@@ -34,16 +36,28 @@ export const EditableSpan: React.FC<EditableSpanPropsType> = ({
   };
 
   return editMode ? (
-    <input
+    <Input
       value={title}
       onBlur={disactivateEditMode}
       onChange={onChangeTitleHandler}
       autoFocus
       // disabled={entityTaskStatus === "loading"}
-    ></input>
+    />
   ) : (
-    <span onDoubleClick={activateEditMode} className={spanStyle}>
-      {value}
-    </span>
+    <>
+      <span onDoubleClick={activateEditMode} className={spanStyle}>
+        {value}
+      </span>
+      <div
+        onClick={activateEditMode}
+        style={{
+          display: "inline-block",
+          marginLeft: "10px",
+          cursor: "pointer",
+        }}
+      >
+        <ModeEditIcon />
+      </div>
+    </>
   );
 };

@@ -9,12 +9,14 @@ import { appSetErrorAC, appSetStatusAC } from "./app-reducer";
 
 const SET_PROFILE_INFO = "PROFILE/set-profile-info";
 const SET_USER_NAME = "PROFILE/set-user-name";
+const SET_USER_AVATAR = "PROFILE/set-user-avatar";
 
 const initialState: LoginResponseType = {
   created: "",
   email: "",
   isAdmin: "",
   name: "",
+  avatar: "",
   publicCardPacksCount: 0,
   rememberMe: false,
   token: "",
@@ -36,6 +38,9 @@ export const profileReducer = (
     case SET_USER_NAME:
       return { ...state, name: action.name };
 
+    case SET_USER_AVATAR:
+      return { ...state, avatar: action.avatar };
+
     default:
       return state;
   }
@@ -48,6 +53,9 @@ export const setProfileInfoAC = (payload: LoginResponseType) =>
 
 export const setUserNameAC = (name: string) =>
   ({ type: SET_USER_NAME, name } as const);
+
+export const setUserAvatarAC = (avatar: string) =>
+  ({ type: SET_USER_AVATAR, avatar } as const);
 
 // ==== THUNKS =====
 
@@ -65,11 +73,29 @@ export const updateUserNameTC =
       .finally(() => dispatch(appSetStatusAC("idle")));
   };
 
+export const updateUserAvatarTC =
+  (avatar: any) => (dispatch: Dispatch<AnyAction>) => {
+    dispatch(appSetStatusAC("loading"));
+    profileAPI
+      .setAvatar(avatar)
+      .then((res) => {
+        dispatch(setUserAvatarAC(avatar));
+      })
+      .catch((err: AxiosError) => {
+        dispatch(appSetErrorAC(err.message));
+      })
+      .finally(() => dispatch(appSetStatusAC("idle")));
+  };
+
 // ==== TYPES ====
 
 type InitialStateType = typeof initialState;
 
 export type SetProfileInfoType = ReturnType<typeof setProfileInfoAC>;
 export type SetUserNameACType = ReturnType<typeof setUserNameAC>;
+export type SetUserAvatarACType = ReturnType<typeof setUserAvatarAC>;
 
-type ProfileActionsTypes = SetProfileInfoType | SetUserNameACType;
+type ProfileActionsTypes =
+  | SetProfileInfoType
+  | SetUserNameACType
+  | SetUserAvatarACType;

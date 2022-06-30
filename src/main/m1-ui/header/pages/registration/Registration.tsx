@@ -55,7 +55,7 @@ export const Registration = () => {
       if (!values.password) {
         errors.password = "Required";
       } else if (values.password.length <= 6) {
-        errors.password = "Invalid values => less then 7 symbols";
+        errors.password = "Less then 7 symbols";
       }
 
       if (!values.confirmPassword) {
@@ -120,7 +120,7 @@ export const Registration = () => {
                 onChange={formik.handleChange}
                 label="Email"
               />
-              {formik.touched.email && formik.errors.email ? (
+              {formik.touched.email || formik.errors.email ? (
                 <div style={{ color: "red" }}>{formik.errors.email}</div>
               ) : null}
             </FormControl>
@@ -149,7 +149,7 @@ export const Registration = () => {
                 }
                 label="Password"
               />
-              {formik.touched.password && formik.errors.password ? (
+              {formik.touched.password || formik.errors.password ? (
                 <div style={{ color: "red" }}>{formik.errors.password}</div>
               ) : null}
             </FormControl>
@@ -182,7 +182,7 @@ export const Registration = () => {
                 }
                 label="Confirm password"
               />
-              {formik.touched.confirmPassword &&
+              {formik.touched.confirmPassword ||
               formik.errors.confirmPassword ? (
                 <div style={{ color: "red" }}>
                   {formik.errors.confirmPassword}
