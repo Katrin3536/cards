@@ -1,7 +1,10 @@
 import React, { useState } from "react";
 import { useFormik } from "formik";
 import { useNavigate } from "react-router-dom";
-import { registerTC } from "../../../../m2-bll/reducers/register-reducer";
+import {
+  isRegisteredSelect,
+  registerTC,
+} from "../../../../m2-bll/reducers/register-reducer";
 import { useAppDispatch, useAppSelector } from "../../../../m2-bll/store";
 import { PATH } from "../../../routes/RoutesConstants";
 import Grid from "@mui/material/Grid";
@@ -18,6 +21,7 @@ import Link from "@mui/material/Link";
 import OutlinedInput from "@mui/material/OutlinedInput";
 import style from "./Registration.module.css";
 import commonStyle from "../../../../assets/styles/Common.module.css";
+import { appStatusSelect } from "../../../../m2-bll/reducers/app-reducer";
 
 type FormikErrorType = {
   email?: string;
@@ -27,10 +31,9 @@ type FormikErrorType = {
 
 export const Registration = () => {
   const [showPassword, setShowPassword] = useState<boolean>(false);
-  const status = useAppSelector((state) => state.app.status);
-  const isRegistered = useAppSelector(
-    (state) => state.registration.isRegistered
-  );
+  const status = useAppSelector(appStatusSelect);
+  const isRegistered = useAppSelector(isRegisteredSelect);
+
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
 

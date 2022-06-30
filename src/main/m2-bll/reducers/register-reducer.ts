@@ -1,5 +1,6 @@
 import { Dispatch } from "redux";
 import { registrationAPI } from "../../m3-dal/api/api";
+import { AppRootStateType } from "../store";
 import { appSetErrorAC, appSetStatusAC } from "./app-reducer";
 
 const initialState = {
@@ -55,6 +56,11 @@ export const registerTC =
       })
       .finally(() => dispatch(appSetStatusAC("idle")));
   };
+
+// ==== SELECTORS ====
+
+export const isRegisteredSelect = (state: AppRootStateType) =>
+  state.registration.isRegistered;
 
 //types
 export type addUserActionType = ReturnType<typeof addUserAC>;

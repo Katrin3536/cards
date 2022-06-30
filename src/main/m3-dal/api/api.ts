@@ -60,6 +60,7 @@ export const forgotPassAPI = {
                 </div>`,
     };
     return axios.post(`https://neko-back.herokuapp.com/2.0/auth/forgot`, data); // request to heroku
+    // return instance.post(`auth/forgot`, data);
   },
 
   createNewPassword(password: string, resetPasswordToken: string | undefined) {

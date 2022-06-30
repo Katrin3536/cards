@@ -1,6 +1,6 @@
 import React from "react";
 import { useAppSelector } from "../../../../m2-bll/store";
-import { Navigate, useNavigate } from "react-router-dom";
+import { Navigate } from "react-router-dom";
 import { PATH } from "../../../routes/RoutesConstants";
 import { ProfileInfo } from "./ProfileInfo/ProfileInfo";
 import Grid from "@mui/material/Grid";
@@ -11,7 +11,6 @@ import { LinearProgress } from "@mui/material";
 const Profile: React.FC = () => {
   const isLoggedIn = useAppSelector((state) => state.authirization.isLoggedIn);
   const status = useAppSelector((state) => state.app.status);
-  const navigate = useNavigate();
 
   if (!isLoggedIn) {
     return <Navigate to={PATH.LOGIN} />;
@@ -21,11 +20,11 @@ const Profile: React.FC = () => {
     <>
       {status === "loading" && <LinearProgress />}
       <div className={style.profile}>
-        <Grid container spacing={3}>
+        <Grid container spacing={2}>
           <Grid item xs={3}>
-            <Paper style={{ padding: "10px" }}>
-              <ProfileInfo />
-            </Paper>
+            {/* <Paper style={{ padding: "10px" }}> */}
+            <ProfileInfo />
+            {/* </Paper> */}
           </Grid>
           <Grid item xs={9}>
             <Paper style={{ padding: "10px" }}>Cards</Paper>

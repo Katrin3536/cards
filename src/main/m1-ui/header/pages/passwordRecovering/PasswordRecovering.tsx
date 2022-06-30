@@ -1,9 +1,13 @@
 import React, { useState } from "react";
 import { useFormik } from "formik";
 import { PATH } from "../../../routes/RoutesConstants";
-import { useNavigate } from "react-router-dom";
-import { forgotPassTC } from "../../../../m2-bll/reducers/forgotPass-reducer";
+import { Navigate, useNavigate } from "react-router-dom";
+import {
+  forgotPassTC,
+  successRecoverySelect,
+} from "../../../../m2-bll/reducers/forgotPass-reducer";
 import { useAppDispatch, useAppSelector } from "../../../../m2-bll/store";
+import { appStatusSelect } from "../../../../m2-bll/reducers/app-reducer";
 import Grid from "@mui/material/Grid";
 import FormControl from "@mui/material/FormControl";
 import FormGroup from "@mui/material/FormGroup";
@@ -18,8 +22,8 @@ import commonStyle from "../../../../assets/styles/Common.module.css";
 export const PasswordRecovering: React.FC = () => {
   const [email, setEmail] = useState("");
 
-  const status = useAppSelector((state) => state.app.status);
-  const successRecovery = useAppSelector((state) => state.recoveryPass.success);
+  const status = useAppSelector(appStatusSelect);
+  const successRecovery = useAppSelector(successRecoverySelect);
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
 
@@ -64,8 +68,12 @@ export const PasswordRecovering: React.FC = () => {
     Object.keys(formik.errors).length !== 0 ||
     Object.values(formik.values.email).length === 0;
 
+  // if (successRecovery) {
+  //   return <>{navigate(PATH.PASSWORD_RECOVERING, { state: email })}</>;
+  // }
+
   if (successRecovery) {
-    return <>{navigate(PATH.PASSWORD_RECOVERING, { state: email })}</>;
+    return <Navigate to={PATH.CHECK_EMAIL} state={email} />;
   }
 
   return (

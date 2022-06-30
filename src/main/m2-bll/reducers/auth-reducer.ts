@@ -1,8 +1,8 @@
 import { AxiosError } from "axios";
 import { AnyAction, Dispatch } from "redux";
 import { authAPI, LoginParamsType } from "../../m3-dal/api/api";
+import { AppRootStateType } from "../store";
 import { appSetErrorAC, appSetStatusAC } from "./app-reducer";
-import { setProfileInfoAC } from "./profile-reducer";
 
 const initialState = {
   isLoggedIn: false,
@@ -27,11 +27,11 @@ export const authReducer = (
   }
 };
 
-//actions
+// ==== ACTIONS =====
 
 export const loginAC = (value: boolean) => ({ type: LOGIN, value } as const);
 
-// THUNKS
+// ===== THUNKS ====
 
 export const loginTC =
   (data: LoginParamsType) => (dispatch: Dispatch<AnyAction>) => {
@@ -54,6 +54,7 @@ export const logoutTC = () => (dispatch: Dispatch<AnyAction>) => {
     .logout()
     .then((res) => {
       dispatch(loginAC(false));
+      dispatch(appSetErrorAC("You are not authorized"));
     })
     .catch((err: AxiosError) => {
       dispatch(appSetErrorAC(err.message));
@@ -61,7 +62,12 @@ export const logoutTC = () => (dispatch: Dispatch<AnyAction>) => {
     .finally(() => dispatch(appSetStatusAC("idle")));
 };
 
-//types
+// ==== SELECTORS ====
+
+export const isLoggedInSelector = (state: AppRootStateType) =>
+  state.authirization.isLoggedIn;
+
+// ==== TYPES ====
 
 type InitialStateType = typeof initialState;
 
