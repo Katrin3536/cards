@@ -20,7 +20,7 @@ export const PATH = {
   CHECK_EMAIL: "/check-email",
 };
 
-function RoutesConstants() {
+export const RoutesConstants = () => {
   return (
     <div>
       <Routes>
@@ -40,6 +40,4 @@ function RoutesConstants() {
       </Routes>
     </div>
   );
-}
-
-export default RoutesConstants;
+};

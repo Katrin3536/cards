@@ -2,8 +2,12 @@ import React, { useState } from "react";
 import { useFormik } from "formik";
 import { PATH } from "../../../routes/RoutesConstants";
 import { Navigate, useNavigate } from "react-router-dom";
-import { loginTC } from "../../../../m2-bll/reducers/auth-reducer";
+import {
+  isLoggedInSelector,
+  loginTC,
+} from "../../../../m2-bll/reducers/auth-reducer";
 import { useAppDispatch, useAppSelector } from "../../../../m2-bll/store";
+import { appStatusSelect } from "../../../../m2-bll/reducers/app-reducer";
 import Grid from "@mui/material/Grid";
 import FormControl from "@mui/material/FormControl";
 import FormGroup from "@mui/material/FormGroup";
@@ -29,9 +33,9 @@ type FormikErrorType = {
 
 export const Login = () => {
   const [showPassword, setShowPassword] = useState<boolean>(false);
+  const status = useAppSelector(appStatusSelect);
+  const isLoggedIn = useAppSelector(isLoggedInSelector);
   const navigate = useNavigate();
-  const status = useAppSelector((state) => state.app.status);
-  const isLoggedIn = useAppSelector((state) => state.authirization.isLoggedIn);
   const dispatch = useAppDispatch();
 
   const formik = useFormik({

@@ -7,14 +7,24 @@ import { App } from "./main/m1-ui/app/App";
 import { store } from "./main/m2-bll/store";
 import reportWebVitals from "./reportWebVitals";
 
+// @ts-ignore
 const root = ReactDOM.createRoot(document.getElementById("root"));
+
 root.render(
   <HashRouter>
-  <Provider store={store}>
-    <App />
-  </Provider>
+    <Provider store={store}>
+      <App />
+    </Provider>
   </HashRouter>
-
 );
 
 reportWebVitals();
+
+// ReactDOM.render(
+//   <HashRouter>
+//     <Provider store={store}>
+//       <App />
+//     </Provider>
+//   </HashRouter>,
+//   document.getElementById("root")
+// );

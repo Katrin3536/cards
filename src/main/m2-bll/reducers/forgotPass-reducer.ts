@@ -1,5 +1,7 @@
+import { AxiosError } from "axios";
 import { AnyAction, Dispatch } from "redux";
 import { forgotPassAPI } from "../../m3-dal/api/api";
+import { AppRootStateType } from "../store";
 import { appSetErrorAC, appSetStatusAC } from "./app-reducer";
 
 const initialState = {
@@ -20,14 +22,14 @@ export const forgotReducer = (
     case FORGOT_PASSWORD: {
       return {
         ...state,
-        success: !state.success,
+        success: action.value,
       };
     }
 
     case PASSWORD_IS_CHANGED: {
       return {
         ...state,
-        passIsChanged: !state.passIsChanged,
+        passIsChanged: action.value,
       };
     }
 
@@ -38,8 +40,10 @@ export const forgotReducer = (
 
 //actions
 
-export const forgotPassAC = () => ({ type: FORGOT_PASSWORD } as const);
-export const passIsCangedAC = () => ({ type: PASSWORD_IS_CHANGED } as const);
+export const forgotPassAC = (value: boolean) =>
+  ({ type: FORGOT_PASSWORD, value } as const);
+export const passIsCangedAC = (value: boolean) =>
+  ({ type: PASSWORD_IS_CHANGED, value } as const);
 
 // THUNKS
 
@@ -51,10 +55,11 @@ export const forgotPassTC =
       .then((response) => {
         console.log(response);
         if (response.data.success) {
-          dispatch(forgotPassAC());
+          dispatch(forgotPassAC(true));
+          dispatch(appSetErrorAC(null));
         }
       })
-      .catch((e) => dispatch(appSetErrorAC(e.response.data.error)))
+      .catch((err: AxiosError) => dispatch(appSetErrorAC(err.message)))
       .finally(() => dispatch(appSetStatusAC("idle")));
   };
 
@@ -69,12 +74,19 @@ export const createNewPassTC =
         console.log(response);
         if (response.status === 200) {
           alert(response.data.info);
-          dispatch(passIsCangedAC());
+          dispatch(passIsCangedAC(true));
         }
       })
-      .catch((e) => dispatch(appSetErrorAC(e.response.data.error)))
+      .catch((err: AxiosError) => dispatch(appSetErrorAC(err.message)))
       .finally(() => dispatch(appSetStatusAC("idle")));
   };
+
+// ==== SELECTORS ====
+
+export const passIsChangedSelect = (state: AppRootStateType) =>
+  state.recoveryPass.passIsChanged;
+export const successRecoverySelect = (state: AppRootStateType) =>
+  state.recoveryPass.success;
 
 //types
 

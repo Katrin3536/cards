@@ -69,7 +69,7 @@ export const ProfileInfo: React.FC = () => {
         <div className={classes.userName}>
           <EditableSpan value={name} onChange={onChangeValueHandler} />
         </div>
-        <p className={classes.userItem}>email: {email}</p>
+        <p>email: {email}</p>
         <span className={classes.numberCards}>
           Cards: {publicCardPacksCount}
         </span>

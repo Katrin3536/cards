@@ -1,6 +1,7 @@
 import { AxiosError } from "axios";
 import { AnyAction, Dispatch } from "redux";
 import { authAPI } from "../../m3-dal/api/api";
+import { AppRootStateType } from "../store";
 import { loginAC, LoginType } from "./auth-reducer";
 import { setProfileInfoAC } from "./profile-reducer";
 
@@ -76,6 +77,13 @@ export const initializeAppTC = () => (dispatch: Dispatch<AnyAction>) => {
     })
     .finally(() => dispatch(appSetStatusAC("idle")));
 };
+
+// ==== SELECTORS ====
+
+export const appErrorSelect = (state: AppRootStateType) => state.app.error;
+export const appStatusSelect = (state: AppRootStateType) => state.app.status;
+export const initializeAppSelect = (state: AppRootStateType) =>
+  state.app.isInitializeApp;
 
 // ==== TYPES ====
 
