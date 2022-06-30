@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useFormik } from "formik";
-import { useNavigate } from "react-router-dom";
+import {Navigate, useNavigate} from 'react-router-dom';
 import {
   isRegisteredSelect,
   registerTC,
@@ -22,6 +22,7 @@ import OutlinedInput from "@mui/material/OutlinedInput";
 import style from "./Registration.module.css";
 import commonStyle from "../../../../assets/styles/Common.module.css";
 import { appStatusSelect } from "../../../../m2-bll/reducers/app-reducer";
+import {isLoggedInSelector} from '../../../../m2-bll/reducers/auth-reducer';
 
 type FormikErrorType = {
   email?: string;
@@ -33,6 +34,7 @@ export const Registration = () => {
   const [showPassword, setShowPassword] = useState<boolean>(false);
   const status = useAppSelector(appStatusSelect);
   const isRegistered = useAppSelector(isRegisteredSelect);
+  const isLoggedIn = useAppSelector(isLoggedInSelector);
 
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
@@ -66,7 +68,6 @@ export const Registration = () => {
       } else if (values.confirmPassword !== values.password) {
         errors.confirmPassword = "Passwords don't match";
       }
-
       return errors;
     },
 
@@ -95,8 +96,11 @@ export const Registration = () => {
     Object.values(formik.values.password).length === 0 ||
     Object.values(formik.values.confirmPassword).length === 0;
 
+  if (isLoggedIn) {
+    return <Navigate to={PATH.PROFILE} />;
+  }
   if (isRegistered) {
-    return <>{navigate(PATH.LOGIN)}</>;
+    return <Navigate to={PATH.LOGIN} />;
   }
 
   return (

@@ -70,12 +70,15 @@ export const initializeAppTC = () => (dispatch: Dispatch<AnyAction>) => {
     .then((response) => {
       dispatch(loginAC(true));
       dispatch(setProfileInfoAC(response.data));
-      dispatch(initializeAppAC(true));
+
     })
     .catch((err: AxiosError) => {
       dispatch(appSetErrorAC(err.message));
     })
-    .finally(() => dispatch(appSetStatusAC("idle")));
+    .finally(() => {
+      dispatch(appSetStatusAC('idle'))
+      dispatch(initializeAppAC(true))
+    })
 };
 
 // ==== SELECTORS ====

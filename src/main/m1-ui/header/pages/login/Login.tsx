@@ -87,7 +87,7 @@ export const Login = () => {
     Object.keys(formik.errors).length !== 0 ||
     Object.values(formik.values.email).length === 0 ||
     Object.values(formik.values.password).length === 0;
-
+  console.log(isLoggedIn);
   if (isLoggedIn) {
     return <Navigate to={PATH.PROFILE} />;
   }
