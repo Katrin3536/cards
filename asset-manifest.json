@@ -1,17 +1,22 @@
 {
   "files": {
-    "main.css": "/cards/static/css/main.257df405.css",
-    "main.js": "/cards/static/js/main.6703652b.js",
+    "main.css": "/cards/static/css/main.fb351c47.css",
+    "main.js": "/cards/static/js/main.33f20a2c.js",
     "static/js/787.8517b185.chunk.js": "/cards/static/js/787.8517b185.chunk.js",
+    "static/media/Poppins-Thin.ttf": "/cards/static/media/Poppins-Thin.59ff6a729e30c99b478e.ttf",
+    "static/media/Poppins-Light.ttf": "/cards/static/media/Poppins-Light.7641a0f76ca9ef6c252c.ttf",
+    "static/media/Poppins-Medium.ttf": "/cards/static/media/Poppins-Medium.673ed42382ab264e0bf5.ttf",
+    "static/media/Poppins-Black.ttf": "/cards/static/media/Poppins-Black.d8b850b920a5ef49d752.ttf",
     "static/media/doubt-3516365.jpg": "/cards/static/media/doubt-3516365.0d37e364077c1ffd1afd.jpg",
+    "static/media/def-avatar.png": "/cards/static/media/def-avatar.3ad98a37176f047b65bd.png",
     "static/media/greenTick.svg": "/cards/static/media/greenTick.dc0ffe1fd6dfbeb4eecb.svg",
     "index.html": "/cards/index.html",
-    "main.257df405.css.map": "/cards/static/css/main.257df405.css.map",
-    "main.6703652b.js.map": "/cards/static/js/main.6703652b.js.map",
+    "main.fb351c47.css.map": "/cards/static/css/main.fb351c47.css.map",
+    "main.33f20a2c.js.map": "/cards/static/js/main.33f20a2c.js.map",
     "787.8517b185.chunk.js.map": "/cards/static/js/787.8517b185.chunk.js.map"
   },
   "entrypoints": [
-    "static/css/main.257df405.css",
-    "static/js/main.6703652b.js"
+    "static/css/main.fb351c47.css",
+    "static/js/main.33f20a2c.js"
   ]
 }
