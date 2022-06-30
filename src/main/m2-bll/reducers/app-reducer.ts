@@ -69,7 +69,7 @@ export const initializeAppTC = () => (dispatch: Dispatch<AnyAction>) => {
     .authMe()
     .then((response) => {
       dispatch(loginAC(true));
-      dispatch(setProfileInfoAC(response.data));
+      dispatch(setProfileInfoAC(response.data)); //? разобраться с куками
 
     })
     .catch((err: AxiosError) => {

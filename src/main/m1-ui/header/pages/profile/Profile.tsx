@@ -15,7 +15,7 @@ const Profile: React.FC = () => {
   if (!isLoggedIn) {
     return <Navigate to={PATH.LOGIN} />;
   }
-
+  console.log(document.cookie);
   return (
     <>
       {status === "loading" && <LinearProgress />}

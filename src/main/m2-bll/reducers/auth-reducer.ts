@@ -3,6 +3,7 @@ import { AnyAction, Dispatch } from "redux";
 import { authAPI, LoginParamsType } from "../../m3-dal/api/api";
 import { AppRootStateType } from "../store";
 import { appSetErrorAC, appSetStatusAC } from "./app-reducer";
+import {setProfileInfoAC} from './profile-reducer';
 
 const initialState = {
   isLoggedIn: false,
@@ -41,6 +42,7 @@ export const loginTC =
       .login(data)
       .then((res) => {
         dispatch(loginAC(true));
+          dispatch(setProfileInfoAC(res.data));
       })
       .catch((err: AxiosError) => {
         dispatch(appSetErrorAC(err.message));

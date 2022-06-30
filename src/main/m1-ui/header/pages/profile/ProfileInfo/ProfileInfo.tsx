@@ -1,7 +1,7 @@
 import React, { useCallback } from "react";
 import LogoutIcon from "@mui/icons-material/Logout";
-import { IconButton } from "@mui/material";
-import { PhotoCamera } from "@mui/icons-material";
+import IconButton  from "@mui/material/IconButton";
+import  PhotoCamera  from "@mui/icons-material/PhotoCamera";
 import { styled } from "@mui/material/styles";
 import { useAppDispatch, useAppSelector } from "../../../../../m2-bll/store";
 import { logoutTC } from "../../../../../m2-bll/reducers/auth-reducer";
@@ -48,7 +48,7 @@ export const ProfileInfo: React.FC = () => {
 
   return (
     <div className={classes.wrapper}>
-      <div className={classes.userAvatar} style={finalAva}></div>
+      <div className={classes.userAvatar} style={finalAva}/>
       <label htmlFor="icon-button-file">
         <Input
           accept="image/*"

@@ -67,15 +67,10 @@ export const createNewPassTC =
   (password: string, token: string | undefined) =>
   (dispatch: Dispatch<AnyAction>) => {
     dispatch(appSetStatusAC("loading"));
-    console.log(password, token);
     forgotPassAPI
       .createNewPassword(password, token)
       .then((response) => {
-        console.log(response);
-        if (response.status === 200) {
-          alert(response.data.info);
           dispatch(passIsCangedAC(true));
-        }
       })
       .catch((err: AxiosError) => dispatch(appSetErrorAC(err.message)))
       .finally(() => dispatch(appSetStatusAC("idle")));
