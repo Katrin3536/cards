@@ -18,12 +18,14 @@ import Link from "@mui/material/Link";
 import OutlinedInput from "@mui/material/OutlinedInput";
 import style from "./PasswordRecovering.module.css";
 import commonStyle from "../../../../assets/styles/Common.module.css";
+import {isLoggedInSelector} from '../../../../m2-bll/reducers/auth-reducer';
 
 export const PasswordRecovering: React.FC = () => {
   const [email, setEmail] = useState("");
 
   const status = useAppSelector(appStatusSelect);
   const successRecovery = useAppSelector(successRecoverySelect);
+  const isLoggedIn = useAppSelector(isLoggedInSelector);
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
 
@@ -68,9 +70,9 @@ export const PasswordRecovering: React.FC = () => {
     Object.keys(formik.errors).length !== 0 ||
     Object.values(formik.values.email).length === 0;
 
-  // if (successRecovery) {
-  //   return <>{navigate(PATH.PASSWORD_RECOVERING, { state: email })}</>;
-  // }
+  if (isLoggedIn) {
+    return <Navigate to={PATH.PROFILE} />;
+  }
 
   if (successRecovery) {
     return <Navigate to={PATH.CHECK_EMAIL} state={email} />;

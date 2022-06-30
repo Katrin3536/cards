@@ -20,11 +20,13 @@ import LinearProgress from "@mui/material/LinearProgress";
 import OutlinedInput from "@mui/material/OutlinedInput";
 import style from "./NewPassword.module.css";
 import commonStyle from "../../../../assets/styles/Common.module.css";
+import {isLoggedInSelector} from '../../../../m2-bll/reducers/auth-reducer';
 
 export const NewPassword = () => {
   const [showPassword, setShowPassword] = useState<boolean>(false);
   const status = useAppSelector(appStatusSelect);
   const passIsChanged = useAppSelector(passIsChangedSelect);
+  const isLoggedIn = useAppSelector(isLoggedInSelector);
   const { token } = useParams();
   const dispatch = useAppDispatch();
 
@@ -42,8 +44,8 @@ export const NewPassword = () => {
 
       if (!values.password) {
         errors.password = "Required";
-      } else if (values.password.length <= 8) {
-        errors.password = "Less then 7 symbols";
+      } else if (values.password.length <= 7) {
+        errors.password = "Less then 8 symbols";
       }
       return errors;
     },
@@ -69,6 +71,9 @@ export const NewPassword = () => {
     Object.keys(formik.errors).length !== 0 ||
     Object.values(formik.values.password).length === 0;
 
+  if (isLoggedIn) {
+    return <Navigate to={PATH.PROFILE} />;
+  }
   if (passIsChanged) {
     return <Navigate to={PATH.LOGIN} />;
   }

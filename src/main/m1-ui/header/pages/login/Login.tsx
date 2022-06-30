@@ -58,8 +58,8 @@ export const Login = () => {
 
       if (!values.password) {
         errors.password = "Required";
-      } else if (values.password.length <= 6) {
-        errors.password = "Password less then 7 symbols";
+      } else if (values.password.length <= 7) {
+        errors.password = "Password less then 8 symbols";
       }
 
       return errors;

@@ -59,8 +59,8 @@ export const Registration = () => {
 
       if (!values.password) {
         errors.password = "Required";
-      } else if (values.password.length <= 6) {
-        errors.password = "Less then 7 symbols";
+      } else if (values.password.length <= 7) {
+        errors.password = "Less then 8 symbols";
       }
 
       if (!values.confirmPassword) {
