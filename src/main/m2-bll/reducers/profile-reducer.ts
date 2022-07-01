@@ -67,9 +67,10 @@ export const updateUserNameTC =
       .then((res) => {
         dispatch(setUserNameAC(name));
       })
-      .catch((err: AxiosError) => {
-        dispatch(appSetErrorAC(err.message));
-      })
+        .catch((err) => {
+          dispatch(
+              appSetErrorAC(err.response.data.error || "Some error occurred")
+          )})
       .finally(() => dispatch(appSetStatusAC("idle")));
   };
 
@@ -81,9 +82,10 @@ export const updateUserAvatarTC =
       .then((res) => {
         dispatch(setUserAvatarAC(avatar));
       })
-      .catch((err: AxiosError) => {
-        dispatch(appSetErrorAC(err.message));
-      })
+        .catch((err) => {
+          dispatch(
+              appSetErrorAC(err.response.data.error || "Some error occurred")
+          )})
       .finally(() => dispatch(appSetStatusAC("idle")));
   };
 

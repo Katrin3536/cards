@@ -1,73 +1,73 @@
-import { AxiosError } from "axios";
-import { AnyAction, Dispatch } from "redux";
-import { authAPI, LoginParamsType } from "../../m3-dal/api/api";
-import { AppRootStateType } from "../store";
-import { appSetErrorAC, appSetStatusAC } from "./app-reducer";
+import {AxiosError} from 'axios';
+import {AnyAction, Dispatch} from 'redux';
+import {authAPI, LoginParamsType} from '../../m3-dal/api/api';
+import {AppRootStateType} from '../store';
+import {appSetErrorAC, appSetStatusAC} from './app-reducer';
 import {setProfileInfoAC} from './profile-reducer';
 
 const initialState = {
-  isLoggedIn: false,
+    isLoggedIn: false,
 };
 
-const LOGIN = "AUTH/login";
+const LOGIN = 'AUTH/login';
 
 export const authReducer = (
-  state: InitialStateType = initialState,
-  action: AuthActionsType
+    state: InitialStateType = initialState,
+    action: AuthActionsType
 ): InitialStateType => {
-  switch (action.type) {
-    case LOGIN: {
-      return {
-        ...state,
-        isLoggedIn: action.value,
-      };
-    }
+    switch (action.type) {
+        case LOGIN: {
+            return {
+                ...state,
+                isLoggedIn: action.value,
+            };
+        }
 
-    default:
-      return state;
-  }
+        default:
+            return state;
+    }
 };
 
 // ==== ACTIONS =====
 
-export const loginAC = (value: boolean) => ({ type: LOGIN, value } as const);
+export const loginAC = (value: boolean) => ({type: LOGIN, value} as const);
 
 // ===== THUNKS ====
 
 export const loginTC =
-  (data: LoginParamsType) => (dispatch: Dispatch<AnyAction>) => {
-    dispatch(appSetStatusAC("loading"));
-    console.log("login +");
-    authAPI
-      .login(data)
-      .then((res) => {
-        dispatch(loginAC(true));
-          dispatch(setProfileInfoAC(res.data));
-      })
-      .catch((err: AxiosError) => {
-        dispatch(appSetErrorAC(err.message));
-      })
-      .finally(() => dispatch(appSetStatusAC("idle")));
-  };
+    (data: LoginParamsType) => (dispatch: Dispatch<AnyAction>) => {
+        dispatch(appSetStatusAC('loading'));
+        authAPI
+            .login(data)
+            .then((res) => {
+                dispatch(loginAC(true));
+                dispatch(setProfileInfoAC(res.data));
+            })
+            .catch((err) => {
+                dispatch(
+                    appSetErrorAC(err.response.data.error || "Some error occurred")
+                )})
+            .finally(() => dispatch(appSetStatusAC('idle')));
+    };
 
 export const logoutTC = () => (dispatch: Dispatch<AnyAction>) => {
-  dispatch(appSetStatusAC("loading"));
-  authAPI
-    .logout()
-    .then((res) => {
-      dispatch(loginAC(false));
-      dispatch(appSetErrorAC("You are not authorized"));
-    })
-    .catch((err: AxiosError) => {
-      dispatch(appSetErrorAC(err.message));
-    })
-    .finally(() => dispatch(appSetStatusAC("idle")));
+    dispatch(appSetStatusAC('loading'));
+    authAPI
+        .logout()
+        .then((res) => {
+            dispatch(loginAC(false));
+            dispatch(appSetErrorAC('You are not authorized'));
+        })
+        .catch((err: AxiosError) => {
+            dispatch(appSetErrorAC(err.message));
+        })
+        .finally(() => dispatch(appSetStatusAC('idle')));
 };
 
 // ==== SELECTORS ====
 
 export const isLoggedInSelector = (state: AppRootStateType) =>
-  state.authirization.isLoggedIn;
+    state.authirization.isLoggedIn;
 
 // ==== TYPES ====
 

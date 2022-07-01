@@ -72,9 +72,10 @@ export const initializeAppTC = () => (dispatch: Dispatch<AnyAction>) => {
       dispatch(setProfileInfoAC(response.data)); //? разобраться с куками
 
     })
-    .catch((err: AxiosError) => {
-      dispatch(appSetErrorAC(err.message));
-    })
+      .catch((err) => {
+        dispatch(
+            appSetErrorAC(err.response.data.error || "Some error occurred")
+        )})
     .finally(() => {
       dispatch(appSetStatusAC('idle'))
       dispatch(initializeAppAC(true))

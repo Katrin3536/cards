@@ -48,7 +48,6 @@ export const registerTC =
         // dispatch(appSetStatusAC('succeeded'));
       })
       .catch((err) => {
-        console.log(err);
         dispatch(
           appSetErrorAC(err.response.data.error || "Some error occurred")
         );

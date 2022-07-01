@@ -72,7 +72,10 @@ export const createNewPassTC =
       .then((response) => {
           dispatch(passIsCangedAC(true));
       })
-      .catch((err: AxiosError) => dispatch(appSetErrorAC(err.message)))
+        .catch((err) => {
+            dispatch(
+                appSetErrorAC(err.response.data.error || "Some error occurred")
+            )})
       .finally(() => dispatch(appSetStatusAC("idle")));
   };
 
