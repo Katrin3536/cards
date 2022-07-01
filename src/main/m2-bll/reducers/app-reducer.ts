@@ -1,4 +1,3 @@
-import { AxiosError } from "axios";
 import { AnyAction, Dispatch } from "redux";
 import { authAPI } from "../../m3-dal/api/api";
 import { AppRootStateType } from "../store";
