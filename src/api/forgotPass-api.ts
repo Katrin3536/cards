@@ -1,13 +1,13 @@
 import axios, {AxiosResponse} from 'axios';
 
 export const instance = axios.create({
-    baseURL: process.env.REACT_APP_BACK_URL || 'http://localhost:7542/2.0/',
+    baseURL: 'https://neko-back.herokuapp.com/2.0/' || 'http://localhost:7542/2.0/',
     withCredentials: true,
 });
 
 export const forgotPassAPI = {
     forgot(email: string) {
-        const data:ForgotPassPayloadType = {
+        const data: ForgotPassPayloadType = {
             email: email,
             from: 'test-front-admin <ai73a@yandex.by>',
             message: `<div style="background-color: lime; padding: 15px">
@@ -17,12 +17,15 @@ export const forgotPassAPI = {
                 </a>
             </div>`,
         };
-        return axios.post<any, AxiosResponse<ForgotPassResponseType>,ForgotPassPayloadType >(`https://neko-back.herokuapp.com/2.0/auth/forgot`, data); // request to heroku
+        return axios.post<any, AxiosResponse<ForgotPassResponseType>, ForgotPassPayloadType>(`https://neko-back.herokuapp.com/2.0/auth/forgot`, data); // request to heroku
         // return instance.post(`auth/forgot`, data);
     },
 
     createNewPassword(password: string, resetPasswordToken: string | undefined) {
-        return instance.post<any, AxiosResponse<ForgotPassResponseType>,UpdatePassPayloadType>(`auth/set-new-password`, {password, resetPasswordToken});
+        return instance.post<any, AxiosResponse<ForgotPassResponseType>, UpdatePassPayloadType>(`auth/set-new-password`, {
+            password,
+            resetPasswordToken
+        });
     },
 };
 
@@ -30,7 +33,7 @@ export const forgotPassAPI = {
 
 export type ForgotPassResponseType = {
     info: string,
-    success:boolean,
+    success: boolean,
 };
 
 export type ForgotPassPayloadType = {
