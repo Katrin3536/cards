@@ -9,6 +9,7 @@ import {RegisterActionsType, registerReducer} from './reducers/register-reducer'
 import {AppActionsTypes, appReducer} from './reducers/app-reducer';
 import {ForgotPassActionsType, forgotReducer} from './reducers/forgotPass-reducer';
 import {ProfileActionsTypes, profileReducer} from './reducers/profile-reducer';
+import {packsCardsReducer} from "./reducers/packsCards-reducer";
 
 let rootReducer = combineReducers({
     authorization: authReducer,
@@ -16,6 +17,7 @@ let rootReducer = combineReducers({
     app: appReducer,
     recoveryPass: forgotReducer,
     profile: profileReducer,
+    cards: packsCardsReducer
 });
 
 export const store = createStore(
