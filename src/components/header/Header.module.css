@@ -1,0 +1,9 @@
+.navlink_list {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    align-items: center;
+    margin-left: 10px;
+    font-size: 20px;
+}
+
