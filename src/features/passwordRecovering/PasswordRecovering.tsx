@@ -19,7 +19,6 @@ import {isLoggedInSelector} from '../../bll/reducers/auth-reducer';
 
 export const PasswordRecovering: React.FC = () => {
     const [email, setEmail] = useState<string>('');
-
     const status = useAppSelector(appStatusSelect);
     const successRecovery = useAppSelector(successRecoverySelect);
     const isLoggedIn = useAppSelector(isLoggedInSelector);
@@ -30,7 +29,6 @@ export const PasswordRecovering: React.FC = () => {
         initialValues: {
             email: '',
         },
-
         validate: (values) => {
             const errors: FormikErrorType = {};
 
@@ -43,7 +41,6 @@ export const PasswordRecovering: React.FC = () => {
             }
             return errors;
         },
-
         onSubmit: (values) => {
             formik.resetForm();
             setEmail(values.email); // для передачи в компоненту сheckEmail

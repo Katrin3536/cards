@@ -13,7 +13,7 @@ export const App: React.FC = () => {
 
     useEffect(() => {
         dispatch(initializeAppTC());
-    }, []);
+    }, [dispatch]);
 
     if (!isInitialized) {
         return <div

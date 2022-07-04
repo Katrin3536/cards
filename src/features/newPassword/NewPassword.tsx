@@ -31,7 +31,6 @@ export const NewPassword: React.FC = () => {
         initialValues: {
             password: '',
         },
-
         validate: (values) => {
 
             const errors: FormikErrorType = {};
@@ -43,7 +42,6 @@ export const NewPassword: React.FC = () => {
             }
             return errors;
         },
-
         onSubmit: ({password}) => {
             formik.resetForm();
             dispatch(createNewPassTC(password, token));
