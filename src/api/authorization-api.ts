@@ -47,6 +47,5 @@ export type LoginResponseType = {
 };
 
 export type LogoutResponseType = {
-    info: string,
-    error: string
+    info: string
 };
