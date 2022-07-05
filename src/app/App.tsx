@@ -6,6 +6,7 @@ import {useAppDispatch, useAppSelector} from '../bll/store';
 import {initializeAppSelect, initializeAppTC} from '../bll/reducers/app-reducer';
 import {ErrorSnackbar} from '../components/errorSnackbar/ErrorSnackbar';
 import CircularProgress from '@mui/material/CircularProgress';
+import { CardsList } from '../features/cardsList/CardsList';
 
 export const App: React.FC = () => {
     const isInitialized = useAppSelector(initializeAppSelect);
@@ -27,6 +28,7 @@ export const App: React.FC = () => {
             <ErrorSnackbar/>
             <Header/>
             <RoutesConstants/>
+            <CardsList/>
         </div>
     );
 };
