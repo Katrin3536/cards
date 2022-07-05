@@ -1,0 +1,11 @@
+.container {
+    width: 1008px;
+    height: 636px;
+    left: 136px;
+    top: 84px;
+    margin: auto;
+    padding: 16px;
+
+    background: #FEFEFF;
+    border-radius: 8px;
+}

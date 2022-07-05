@@ -28,7 +28,6 @@ export const App: React.FC = () => {
             <ErrorSnackbar/>
             <Header/>
             <RoutesConstants/>
-            <CardsList/>
         </div>
     );
 };
