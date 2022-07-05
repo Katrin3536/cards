@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import {useAppSelector} from '../../bll/store';
 import {Navigate} from 'react-router-dom';
 import {PATH} from '../../components/common/routes/RoutesConstants';
@@ -9,10 +9,15 @@ import {isLoggedInSelector} from '../../bll/reducers/auth-reducer';
 import {appStatusSelect} from '../../bll/reducers/app-reducer';
 import {Input} from "@mui/material";
 import TableCards from './TableCards';
+import {getCardsListTC} from "../../bll/reducers/packsCards-reducer";
+import {useDispatch} from "react-redux";
 
-const ariaLabel = { 'aria-label': 'description' };
+
+
+const ariaLabel = {'aria-label': 'description'};
 
 export const PacksCardsContainer: React.FC = () => {
+    const dispatch = useDispatch()
     const isLoggedIn = useAppSelector(isLoggedInSelector);
     const status = useAppSelector(appStatusSelect);
 
@@ -20,7 +25,17 @@ export const PacksCardsContainer: React.FC = () => {
         return <Navigate to={PATH.LOGIN}/>;
     }
 
+    useEffect(() => {
+        dispatch(getCardsListTC())
+    }, [])
+
+    const onClickHandler = () => {
+        dispatch(getCardsListTC())
+    }
+
     return (
+
+
         <>
             {status === 'loading' && <LinearProgress/>}
             <div>
@@ -35,7 +50,7 @@ export const PacksCardsContainer: React.FC = () => {
                         >
                             <div>Show packs cards</div>
                             <button>my</button>
-                            <button>all</button>
+                            <button onClick={onClickHandler}>all</button>
                         </Paper>
                     </Grid>
 
@@ -47,10 +62,10 @@ export const PacksCardsContainer: React.FC = () => {
                             }}
                         >Packs list
                             <div>
-                                <Input defaultValue="Search" inputProps={ariaLabel} />
+                                <Input defaultValue="Search" inputProps={ariaLabel}/>
                                 <button>add new pack</button>
                             </div>
-                            <TableCards />
+                            <TableCards/>
                         </Paper>
 
                     </Grid>

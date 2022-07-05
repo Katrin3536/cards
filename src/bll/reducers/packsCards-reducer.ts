@@ -4,6 +4,7 @@ import {AppRootStateType, AppThunk} from '../store';
 import {loginAC, LoginType} from './auth-reducer';
 import {setProfileInfoAC} from './profile-reducer';
 import {getCardsAPI} from "../../api/cards-api";
+import {Dispatch} from "redux";
 
 //loadind => preloader visible
 // 'idle' | 'succeeded' | 'failed' => preloader unvisible
@@ -31,7 +32,7 @@ const initialState = {
 export const packsCardsReducer = (state: InitialStateType = initialState, action: any): InitialStateType => {
     switch (action.type) {
         case 'get-all-cards':
-            return {...state, ...action.data};
+            return {...action.data};
 
         /*case 'APP/app-error':
             return {...state, error: action.error,};*/
@@ -49,10 +50,15 @@ export const getAllCardsAC = (data: any) => ({type: 'get-all-cards', data} as co
 
 // ==== THUNKS =====
 
-export const getCardsListTC = (): /*AppThunk*/any => async dispatch => {
-    try {
-        const response = await getCardsAPI.getCardsList();
-        dispatch(getAllCardsAC(response));
+export const getCardsListTC = (): any => {
+    console.log('211212')
+    return (dispatch: Dispatch<any>) => {
+        getCardsAPI.getCardsList()
+        .then((response)=>{
+            dispatch(getAllCardsAC(response.data));
+        })
+        //@ts-ignore
+
     } /*catch (e) {
         const err = e as Error | AxiosError<{ error: string }>;
         if (axios.isAxiosError(err)) {
@@ -61,9 +67,7 @@ export const getCardsListTC = (): /*AppThunk*/any => async dispatch => {
         } else {
             //dispatch(appSetErrorAC(err.message));
         }
-    }*/ finally {
-
-    }
+    }*/
 };
 
 // ==== SELECTORS ====
