@@ -7,14 +7,14 @@ export const instance = axios.create({
 
 export const getPacksCardsAPI = {
   getUserPacksCardsList(userID: string) {
-    return instance.get<AxiosResponse<ResponseType<{ item: CardPacksType }>>>(
-      `cards/pack?user_id=${userID}`
-    );
+    return instance.get<
+      AxiosResponse<PacksResponseType<{ item: CardPacksType }>>
+    >(`cards/pack?user_id=${userID}`);
   },
   getPacksCardsList(page: number, pageCount: number = 8) {
-    return instance.get<AxiosResponse<ResponseType<{ item: CardPacksType }>>>(
-      `cards/pack?page=${page}&pageCount=${pageCount}`
-    );
+    return instance.get<
+      AxiosResponse<PacksResponseType<{ item: CardPacksType }>>
+    >(`cards/pack?page=${page}&pageCount=${pageCount}`);
   },
 
   getRangeredPacksCardsList(
@@ -23,15 +23,15 @@ export const getPacksCardsAPI = {
     min: number = 0, // значения брать из range
     max: number = 110 // значения брать из range
   ) {
-    return instance.get<AxiosResponse<ResponseType<{ item: CardPacksType }>>>(
-      `cards/pack?page=${page}&pageCount=${pageCount}&min=${min}&max=${max}`
-    );
+    return instance.get<
+      AxiosResponse<PacksResponseType<{ item: CardPacksType }>>
+    >(`cards/pack?page=${page}&pageCount=${pageCount}&min=${min}&max=${max}`);
   },
 
   getSortPacksCardsList(page: number, pageCount: number = 8) {
-    return instance.get<AxiosResponse<ResponseType<{ item: CardPacksType }>>>(
-      `cards/pack?page=${page}&pageCount=${pageCount}&sortPacks=0updated`
-    );
+    return instance.get<
+      AxiosResponse<PacksResponseType<{ item: CardPacksType }>>
+    >(`cards/pack?page=${page}&pageCount=${pageCount}&sortPacks=0updated`);
   },
 
   addPackCards(
@@ -94,7 +94,7 @@ type UpdatePackNamePayloadType = {
   };
 };
 
-type CardPacksType = {
+export type CardPacksType = {
   _id: string;
   user_id: string;
   name: string;
@@ -103,7 +103,7 @@ type CardPacksType = {
   updated: string;
 };
 
-type ResponseType<D = {}> = {
+export type PacksResponseType<D = {}> = {
   data: D;
   cardPacksTotalCount: number;
   maxCardsCount: number;
