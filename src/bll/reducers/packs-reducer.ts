@@ -1,10 +1,6 @@
 import { AxiosError } from "axios";
 import { AppThunk } from "../store";
-import {
-  CardPacksType,
-  getPacksAPI,
-  PacksResponseType,
-} from "../../api/packs-api";
+import { getPacksAPI, PacksResponseType } from "../../api/packs-api";
 import { appSetStatusAC } from "./app-reducer";
 import { handleNetworkError } from "../../utils/errorUtils";
 
@@ -12,20 +8,8 @@ import { handleNetworkError } from "../../utils/errorUtils";
 // 'idle' | 'succeeded' | 'failed' => preloader unvisible
 
 const initialState = {
-  // packsCards: {
-  //   _id: null as null | string,
-  //   user_id: null as null | string,
-  //   name: null as null | string,
-  //   cardsCount: null as null | number,
-  //   created: null as null | string,
-  //   updated: null as null | string,
-  // },
   packsCards: [{}],
   cardPacksTotalCount: null as null | number,
-  //   maxCardsCount: null as null | number,
-  //   minCardsCount: null as null | number,
-  //   page: null as null | number,   // по идее можно через локальный стейт если нужно будет
-  //   pageCount: null as null | number,
 };
 
 export const packsReducer = (
@@ -33,12 +17,14 @@ export const packsReducer = (
   action: PacksActionsTypes
 ): InitialStateType => {
   switch (action.type) {
-    case "PACKS/get-one-page-packs":
+    case "PACKS/get-one-page-packs": {
+      console.log(action.data);
       return {
         ...state,
-        packsCards: action.data.data.map((pack) => pack.item),
+        packsCards: action.data.cardPacks,
         cardPacksTotalCount: action.data.cardPacksTotalCount,
       };
+    }
 
     default:
       return state;
@@ -47,9 +33,8 @@ export const packsReducer = (
 
 // ==== ACTIONS =====
 
-export const getPacksCardsAC = (
-  data: PacksResponseType<{ item: CardPacksType }>
-) => ({ type: "PACKS/get-one-page-packs", data } as const);
+export const getPacksCardsAC = (data: PacksResponseType) =>
+  ({ type: "PACKS/get-one-page-packs", data } as const);
 
 // ==== THUNKS =====
 
@@ -60,7 +45,7 @@ export const getPacksListTC =
       dispatch(appSetStatusAC("loading"));
       const response = await getPacksAPI.getPacksList(page, pageCount);
       if (response.status === 200) {
-        dispatch(getPacksCardsAC(response.data.data));
+        dispatch(getPacksCardsAC(response.data));
       }
     } catch (e) {
       const err = e as Error | AxiosError<{ error: string }>;
@@ -81,7 +66,7 @@ export const getUserPacksListTC =
         userID
       );
       if (response.status === 200) {
-        dispatch(getPacksCardsAC(response.data.data));
+        dispatch(getPacksCardsAC(response.data));
       }
     } catch (e) {
       const err = e as Error | AxiosError<{ error: string }>;
@@ -103,7 +88,7 @@ export const getRangeredPacksListTC =
         max
       );
       if (response.status === 200) {
-        dispatch(getPacksCardsAC(response.data.data));
+        dispatch(getPacksCardsAC(response.data));
       }
     } catch (e) {
       const err = e as Error | AxiosError<{ error: string }>;
@@ -120,7 +105,7 @@ export const getSortPacksListTC =
       dispatch(appSetStatusAC("loading"));
       const response = await getPacksAPI.getSortPacksList(page, pageCount);
       if (response.status === 200) {
-        dispatch(getPacksCardsAC(response.data.data));
+        dispatch(getPacksCardsAC(response.data));
       }
     } catch (e) {
       const err = e as Error | AxiosError<{ error: string }>;

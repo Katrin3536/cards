@@ -7,14 +7,14 @@ export const instance = axios.create({
 
 export const getPacksAPI = {
   getUserPacksList(page: number, pageCount: number = 8, userID: string) {
-    return instance.get<
-      AxiosResponse<PacksResponseType<{ item: CardPacksType }>>
-    >(`cards/pack?page=${page}&pageCount=${pageCount}&user_id=${userID}`);
+    return instance.get<any, AxiosResponse<PacksResponseType>, any>(
+      `cards/pack?page=${page}&pageCount=${pageCount}&user_id=${userID}`
+    );
   },
   getPacksList(page: number, pageCount: number = 8) {
-    return instance.get<
-      AxiosResponse<PacksResponseType<{ item: CardPacksType }>>
-    >(`cards/pack?page=${page}&pageCount=${pageCount}`);
+    return instance.get<any, AxiosResponse<PacksResponseType>, any>(
+      `cards/pack?page=${page}&pageCount=${pageCount}`
+    );
   },
 
   getRangeredPacksList(
@@ -23,15 +23,15 @@ export const getPacksAPI = {
     min: number = 0, // значения брать из range
     max: number = 110 // значения брать из range
   ) {
-    return instance.get<
-      AxiosResponse<PacksResponseType<{ item: CardPacksType }>>
-    >(`cards/pack?page=${page}&pageCount=${pageCount}&min=${min}&max=${max}`);
+    return instance.get<any, AxiosResponse<PacksResponseType>, any>(
+      `cards/pack?page=${page}&pageCount=${pageCount}&min=${min}&max=${max}`
+    );
   },
 
   getSortPacksList(page: number, pageCount: number = 8) {
-    return instance.get<
-      AxiosResponse<PacksResponseType<{ item: CardPacksType }>>
-    >(`cards/pack?page=${page}&pageCount=${pageCount}&sortPacks=0updated`);
+    return instance.get<any, AxiosResponse<PacksResponseType>, any>(
+      `cards/pack?page=${page}&pageCount=${pageCount}&sortPacks=0updated`
+    );
   },
 
   addPack(name: string, deckCover: string = "", _private: boolean = false) {
@@ -46,15 +46,15 @@ export const getPacksAPI = {
     };
     return instance.post<
       any,
-      AxiosResponse<PUDResponseType<{ item: CardPacksType }>>,
+      AxiosResponse<PUDResponseType>,
       AddPackPayloadType
     >(`cards/pack`, data);
   },
 
   deletePack(packID: string) {
-    return instance.delete<
-      AxiosResponse<PUDResponseType<{ item: CardPacksType }>>
-    >(`cards/pack?id=${packID}`);
+    return instance.delete<AxiosResponse<PUDResponseType>>(
+      `cards/pack?id=${packID}`
+    );
   },
 
   updatePackName(packID: string, newTitile: string) {
@@ -67,7 +67,7 @@ export const getPacksAPI = {
 
     return instance.put<
       any,
-      AxiosResponse<PUDResponseType<{ item: CardPacksType }>>,
+      AxiosResponse<PUDResponseType>,
       UpdatePackNamePayloadType
     >(`cards/pack`, data);
   },
@@ -99,8 +99,8 @@ export type CardPacksType = {
   updated: string;
 };
 
-export type PacksResponseType<D = {}> = {
-  data: Array<D>;
+export type PacksResponseType = {
+  cardPacks: Array<CardPacksType>;
   cardPacksTotalCount: number;
   maxCardsCount: number;
   minCardsCount: number;
@@ -108,8 +108,8 @@ export type PacksResponseType<D = {}> = {
   pageCount: number;
 };
 
-export type PUDResponseType<D = {}> = {
-  data: D;
+export type PUDResponseType = {
+  cardPacks: Array<CardPacksType>;
   token: string;
   tokenDeathTime: number;
 };

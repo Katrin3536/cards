@@ -7,13 +7,13 @@ export const instance = axios.create({
 
 export const getCardsAPI = {
   getCardsList(page: number, pageCount: number = 8, cardsPackID: string) {
-    return instance.get<AxiosResponse<CardsResponseType<{ item: CardType }>>>(
+    return instance.get<any, AxiosResponse<CardsResponseType>, any>(
       `cards/card?page=${page}&pageCount=${pageCount}&cardsPack_id=${cardsPackID}`
     );
   },
 
   getSortCardsList(page: number, pageCount: number = 8) {
-    return instance.get<AxiosResponse<CardsResponseType<{ item: CardType }>>>(
+    return instance.get<AxiosResponse<CardsResponseType>>(
       `cards/card?page=${page}&pageCount=${pageCount}&sortCards=0grade`
     );
   },
@@ -24,7 +24,7 @@ export const getCardsAPI = {
     min: number = 0,
     max: number = 5
   ) {
-    return instance.get<AxiosResponse<CardsResponseType<{ item: CardType }>>>(
+    return instance.get<AxiosResponse<CardsResponseType>>(
       `cards/card?page=${page}&pageCount=${pageCount}&min=${min}&max=${max}`
     );
   },
@@ -39,13 +39,13 @@ export const getCardsAPI = {
     };
     return instance.post<
       any,
-      AxiosResponse<PUDResponseType<{ item: CardType }>>,
+      AxiosResponse<PUDResponseType>,
       AddCardPayloadType
     >(`cards/card`, data);
   },
 
   deleteCard(cardID: string) {
-    return instance.delete<AxiosResponse<PUDResponseType<{ item: CardType }>>>(
+    return instance.delete<AxiosResponse<PUDResponseType>>(
       `cards/card?id=${cardID}`
     );
   },
@@ -61,7 +61,7 @@ export const getCardsAPI = {
 
     return instance.put<
       any,
-      AxiosResponse<PUDResponseType<{ item: CardType }>>,
+      AxiosResponse<PUDResponseType>,
       UpdateCardPayloadType
     >(`cards/card`, data);
   },
@@ -102,8 +102,8 @@ export type CardType = {
   __v: number;
 };
 
-export type CardsResponseType<D = {}> = {
-  data: Array<D>;
+export type CardsResponseType = {
+  cards: Array<CardType>;
   packUserId: string;
   cardsTotalCount: number;
   maxGrade: number;
@@ -114,8 +114,8 @@ export type CardsResponseType<D = {}> = {
   tokenDeathTime: number; //???
 };
 
-export type PUDResponseType<D = {}> = {
-  data: D;
+export type PUDResponseType = {
+  cards: Array<CardType>;
   token: string;
   tokenDeathTime: number;
 };

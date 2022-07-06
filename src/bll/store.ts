@@ -23,7 +23,7 @@ import {
   profileReducer,
 } from "./reducers/profile-reducer";
 import { PacksActionsTypes, packsReducer } from "./reducers/packs-reducer";
-import { CardsActionsTypes } from "./reducers/cards-reducer";
+import { CardsActionsTypes, cardsReducer } from "./reducers/cards-reducer";
 
 let rootReducer = combineReducers({
   authorization: authReducer,
@@ -32,6 +32,7 @@ let rootReducer = combineReducers({
   recoveryPass: forgotReducer,
   profile: profileReducer,
   packs: packsReducer,
+  cards: cardsReducer,
 });
 
 export const store = createStore(

@@ -8,28 +8,8 @@ import { CardsResponseType, CardType, getCardsAPI } from "../../api/cards-api";
 // 'idle' | 'succeeded' | 'failed' => preloader unvisible
 
 const initialState = {
-  // cards: {
-  //   _id: null as null | string,
-  //   cardsPack_id: null as null | string,
-  //   user_id: null as null | string,
-  //   answer: null as null | string,
-  //   question: null as null | string,
-  //   grade: null as null | number,
-  //   shots: null as null | number,
-  //   comments: null as null | string,
-  //   type: null as null | string,
-  //   rating: null as null | number,
-  //   more_id: null as null | string,
-  //   created: null as null | string,
-  //   updated: null as null | string,
-  //   __v: null as null | number,
-  // },
   cards: [{}],
   cardsTotalCount: null as null | number,
-  //   maxGrade: null as null | number,
-  //   minGrade: null as null | number,
-  //   page: null as null | number,   // по идее можно через локальный стейт если нужно будет
-  //   pageCount: null as null | number,
 };
 
 export const cardsReducer = (
@@ -37,12 +17,14 @@ export const cardsReducer = (
   action: CardsActionsTypes
 ): InitialStateType => {
   switch (action.type) {
-    case "CARDS/get-one-page-cards":
+    case "CARDS/get-one-page-cards": {
+      console.log(action.data);
       return {
         ...state,
-        cards: action.data.data.map((card) => card.item),
+        cards: action.data.cards,
         cardsTotalCount: action.data.cardsTotalCount,
       };
+    }
 
     default:
       return state;
@@ -51,8 +33,9 @@ export const cardsReducer = (
 
 // ==== ACTIONS =====
 
-export const getCardsAC = (data: CardsResponseType<{ item: CardType }>) =>
+export const getCardsAC = (data: CardsResponseType) =>
   ({ type: "CARDS/get-one-page-cards", data } as const);
+//
 
 // ==== THUNKS =====
 
@@ -67,7 +50,7 @@ export const getCardsListTC =
         cardsPackID
       );
       if (response.status === 200) {
-        dispatch(getCardsAC(response.data.data));
+        dispatch(getCardsAC(response.data));
       }
     } catch (e) {
       const err = e as Error | AxiosError<{ error: string }>;
@@ -120,7 +103,6 @@ export const addCardTC =
   (
     page: number,
     pageCount: number,
-    cardsPackID: string,
     question: string,
     answer: string,
     cardsPack_id: string
@@ -134,7 +116,7 @@ export const addCardTC =
         cardsPack_id
       );
       if (response.status === 200) {
-        dispatch(getCardsListTC(page, pageCount, cardsPackID));
+        dispatch(getCardsListTC(page, pageCount, cardsPack_id));
       }
     } catch (e) {
       const err = e as Error | AxiosError<{ error: string }>;
