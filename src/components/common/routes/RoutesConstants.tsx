@@ -9,6 +9,7 @@ import Error404 from "../../error404/Error404";
 import { NewPassword } from "../../../features/newPassword/NewPassword";
 import { Login } from "../../../features/login/Login";
 import { CardsTable } from "../../cardsTable/CardsTable";
+import { CardInfo } from "../../../features/cardInfo/CardInfo";
 
 export const PATH = {
   LOGIN: "/login",
@@ -20,6 +21,7 @@ export const PATH = {
   TEST_PAGE: "/testPage",
   CHECK_EMAIL: "/check-email",
   CARDS_LIST: "/cards-list",
+  CARD_INFO: "/card-info",
 };
 
 export const RoutesConstants: React.FC = () => {
@@ -40,6 +42,7 @@ export const RoutesConstants: React.FC = () => {
         <Route path={"/*"} element={<Error404 />} />
         <Route path={PATH.CHECK_EMAIL} element={<CheckEmail />} />
         <Route path={PATH.CARDS_LIST} element={<CardsTable />} />
+        <Route path={PATH.CARD_INFO} element={<CardInfo />} />
       </Routes>
     </div>
   );

@@ -22,8 +22,10 @@ import Button from "@mui/material/Button";
 import GradeIcon from "@mui/icons-material/Grade";
 import style from "./CardsTable.module.css";
 import { addCardTC, getCardsListTC } from "../../bll/reducers/cards-reducer";
-import { useAppDispatch } from "../../bll/store";
+import { useAppDispatch, useAppSelector } from "../../bll/store";
 import { getPacksListTC } from "../../bll/reducers/packs-reducer";
+import { PATH } from "../common/routes/RoutesConstants";
+import { useNavigate } from "react-router-dom";
 
 interface Data {
   question: string;
@@ -275,6 +277,11 @@ export const CardsTable = () => {
 
   const dispatch = useAppDispatch();
 
+  const cardsSelector = useAppSelector((state) => state.cards.cards);
+
+  const cardsForRender = cardsSelector.map((card) => card.question);
+  const navigate = useNavigate();
+
   React.useEffect(() => {
     dispatch(getPacksListTC(1, 8));
 
@@ -347,6 +354,11 @@ export const CardsTable = () => {
                       tabIndex={-1}
                       key={index}
                       selected={isItemSelected}
+                      onClick={() =>
+                        navigate(PATH.CARD_INFO, {
+                          state: { question: row.question, answer: row.answer },
+                        })
+                      }
                     >
                       <TableCell
                         component="th"

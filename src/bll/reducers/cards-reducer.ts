@@ -1,5 +1,5 @@
 import { AxiosError } from "axios";
-import { AppThunk } from "../store";
+import { AppRootStateType, AppThunk } from "../store";
 import { appSetStatusAC } from "./app-reducer";
 import { handleNetworkError } from "../../utils/errorUtils";
 import { CardsResponseType, CardType, getCardsAPI } from "../../api/cards-api";
@@ -8,8 +8,25 @@ import { CardsResponseType, CardType, getCardsAPI } from "../../api/cards-api";
 // 'idle' | 'succeeded' | 'failed' => preloader unvisible
 
 const initialState = {
-  cards: [{}],
-  cardsTotalCount: null as null | number,
+  cards: [
+    {
+      _id: "",
+      cardsPack_id: "",
+      user_id: "",
+      answer: "",
+      question: "",
+      grade: 0,
+      shots: 0,
+      comments: "",
+      type: "",
+      rating: 0,
+      more_id: "",
+      created: "",
+      updated: "",
+      __v: 0,
+    },
+  ],
+  cardsTotalCount: 0,
 };
 
 export const cardsReducer = (
@@ -178,8 +195,13 @@ export const updateCardTC =
 
 // ==== SELECTORS ====
 
+export const cardsSelect = (state: AppRootStateType) => state.cards.cards;
+
 // ==== TYPES ====
-export type InitialStateType = typeof initialState;
+export type InitialStateType = {
+  cards: Array<CardType>;
+  cardsTotalCount: number;
+};
 export type RequestStatusType = "idle" | "loading" | "succeeded" | "failed";
 
 export type CardListType = Array<CardType> & {
