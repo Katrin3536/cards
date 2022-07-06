@@ -1,12 +1,10 @@
-import axios, { AxiosError } from "axios";
-import { authAPI } from "../../api/authorization-api";
-import { AppRootStateType, AppThunk } from "../store";
+import { AxiosError } from "axios";
+import { AppThunk } from "../store";
 import {
   CardPacksType,
   getPacksCardsAPI,
   PacksResponseType,
 } from "../../api/packsCards-api";
-import { Dispatch } from "redux";
 import { appSetStatusAC } from "./app-reducer";
 import { handleNetworkError } from "../../utils/errorUtils";
 
@@ -59,12 +57,135 @@ export const getPacksListTC =
   async (dispatch) => {
     try {
       dispatch(appSetStatusAC("loading"));
-      const response = await getPacksCardsAPI.getPacksCardsList(
+      const response = await getPacksCardsAPI.getPacksList(page, pageCount);
+      if (response.status === 200) {
+        dispatch(getPacksCardsAC(response.data.data));
+      }
+    } catch (e) {
+      const err = e as Error | AxiosError<{ error: string }>;
+      handleNetworkError(dispatch, err);
+    } finally {
+      dispatch(appSetStatusAC("idle"));
+    }
+  };
+
+export const getUserPacksListTC =
+  (page: number, pageCount: number, userID: string): AppThunk =>
+  async (dispatch) => {
+    try {
+      dispatch(appSetStatusAC("loading"));
+      const response = await getPacksCardsAPI.getUserPacksList(
         page,
-        pageCount
+        pageCount,
+        userID
       );
       if (response.status === 200) {
         dispatch(getPacksCardsAC(response.data.data));
+      }
+    } catch (e) {
+      const err = e as Error | AxiosError<{ error: string }>;
+      handleNetworkError(dispatch, err);
+    } finally {
+      dispatch(appSetStatusAC("idle"));
+    }
+  };
+
+export const getRangeredPacksListTC =
+  (page: number, pageCount: number, min: number, max: number): AppThunk =>
+  async (dispatch) => {
+    try {
+      dispatch(appSetStatusAC("loading"));
+      const response = await getPacksCardsAPI.getRangeredPacksList(
+        page,
+        pageCount,
+        min,
+        max
+      );
+      if (response.status === 200) {
+        dispatch(getPacksCardsAC(response.data.data));
+      }
+    } catch (e) {
+      const err = e as Error | AxiosError<{ error: string }>;
+      handleNetworkError(dispatch, err);
+    } finally {
+      dispatch(appSetStatusAC("idle"));
+    }
+  };
+
+export const getSortPacksListTC =
+  (page: number, pageCount: number): AppThunk =>
+  async (dispatch) => {
+    try {
+      dispatch(appSetStatusAC("loading"));
+      const response = await getPacksCardsAPI.getSortPacksList(page, pageCount);
+      if (response.status === 200) {
+        dispatch(getPacksCardsAC(response.data.data));
+      }
+    } catch (e) {
+      const err = e as Error | AxiosError<{ error: string }>;
+      handleNetworkError(dispatch, err);
+    } finally {
+      dispatch(appSetStatusAC("idle"));
+    }
+  };
+
+export const addPackTC =
+  (
+    page: number,
+    pageCount: number,
+    name: string,
+    deckCover: string,
+    _private: boolean
+  ): AppThunk =>
+  async (dispatch) => {
+    try {
+      dispatch(appSetStatusAC("loading"));
+      const response = await getPacksCardsAPI.addPack(
+        name,
+        deckCover,
+        _private
+      );
+      if (response.status === 200) {
+        dispatch(getPacksListTC(page, pageCount));
+      }
+    } catch (e) {
+      const err = e as Error | AxiosError<{ error: string }>;
+      handleNetworkError(dispatch, err);
+    } finally {
+      dispatch(appSetStatusAC("idle"));
+    }
+  };
+
+export const deletePackTC =
+  (page: number, pageCount: number, packID: string): AppThunk =>
+  async (dispatch) => {
+    try {
+      dispatch(appSetStatusAC("loading"));
+      const response = await getPacksCardsAPI.deletePack(packID);
+      if (response.status === 200) {
+        dispatch(getPacksListTC(page, pageCount));
+      }
+    } catch (e) {
+      const err = e as Error | AxiosError<{ error: string }>;
+      handleNetworkError(dispatch, err);
+    } finally {
+      dispatch(appSetStatusAC("idle"));
+    }
+  };
+
+export const updatePackNameTC =
+  (
+    page: number,
+    pageCount: number,
+    packID: string,
+    newTitile: string
+  ): AppThunk =>
+  async (dispatch) => {
+    try {
+      dispatch(appSetStatusAC("loading"));
+      const response = await getPacksCardsAPI.updatePackName(packID, newTitile);
+      if (response.status === 200) {
+        dispatch(getPacksListTC(page, pageCount));
       }
     } catch (e) {
       const err = e as Error | AxiosError<{ error: string }>;
@@ -87,7 +208,5 @@ export type InitialStateType = typeof initialState;
 export type RequestStatusType = "idle" | "loading" | "succeeded" | "failed";
 
 export type GetPacksCardsType = ReturnType<typeof getPacksCardsAC>;
-// export type AppSetStatusType = ReturnType<typeof appSetStatusAC>;
-// export type AppSetErrorType = ReturnType<typeof appSetErrorAC>;
 
 export type PacksActionsTypes = GetPacksCardsType;

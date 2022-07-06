@@ -6,18 +6,18 @@ export const instance = axios.create({
 });
 
 export const getPacksCardsAPI = {
-  getUserPacksCardsList(userID: string) {
+  getUserPacksList(page: number, pageCount: number = 8, userID: string) {
     return instance.get<
       AxiosResponse<PacksResponseType<{ item: CardPacksType }>>
-    >(`cards/pack?user_id=${userID}`);
+    >(`cards/pack?page=${page}&pageCount=${pageCount}&user_id=${userID}`);
   },
-  getPacksCardsList(page: number, pageCount: number = 8) {
+  getPacksList(page: number, pageCount: number = 8) {
     return instance.get<
       AxiosResponse<PacksResponseType<{ item: CardPacksType }>>
     >(`cards/pack?page=${page}&pageCount=${pageCount}`);
   },
 
-  getRangeredPacksCardsList(
+  getRangeredPacksList(
     page: number,
     pageCount: number = 8,
     min: number = 0, // значения брать из range
@@ -28,20 +28,16 @@ export const getPacksCardsAPI = {
     >(`cards/pack?page=${page}&pageCount=${pageCount}&min=${min}&max=${max}`);
   },
 
-  getSortPacksCardsList(page: number, pageCount: number = 8) {
+  getSortPacksList(page: number, pageCount: number = 8) {
     return instance.get<
       AxiosResponse<PacksResponseType<{ item: CardPacksType }>>
     >(`cards/pack?page=${page}&pageCount=${pageCount}&sortPacks=0updated`);
   },
 
-  addPackCards(
-    name: string,
-    deckCover: string = "",
-    _private: boolean = false
-  ) {
+  addPack(name: string, deckCover: string = "", _private: boolean = false) {
     //response игнорируем, заново запрос колод!!!
 
-    const data: AddPackCardPayloadType = {
+    const data: AddPackPayloadType = {
       cardsPack: {
         name: name,
         deckCover: deckCover,
@@ -51,17 +47,17 @@ export const getPacksCardsAPI = {
     return instance.post<
       any,
       AxiosResponse<PUDResponseType<{ item: CardPacksType }>>,
-      AddPackCardPayloadType
+      AddPackPayloadType
     >(`cards/pack`, data);
   },
 
-  deletePackCards(packID: string) {
+  deletePack(packID: string) {
     return instance.delete<
       AxiosResponse<PUDResponseType<{ item: CardPacksType }>>
     >(`cards/pack?id=${packID}`);
   },
 
-  updateNamePackCards(packID: string, newTitile: string) {
+  updatePackName(packID: string, newTitile: string) {
     const data: UpdatePackNamePayloadType = {
       cardsPack: {
         _id: packID,
@@ -79,7 +75,7 @@ export const getPacksCardsAPI = {
 
 // ==== TYPES ====
 
-type AddPackCardPayloadType = {
+export type AddPackPayloadType = {
   cardsPack: {
     name: string;
     deckCover?: string;
@@ -87,7 +83,7 @@ type AddPackCardPayloadType = {
   };
 };
 
-type UpdatePackNamePayloadType = {
+export type UpdatePackNamePayloadType = {
   cardsPack: {
     _id: string;
     name: string;
@@ -112,8 +108,13 @@ export type PacksResponseType<D = {}> = {
   pageCount: number;
 };
 
-type PUDResponseType<D = {}> = {
+export type PUDResponseType<D = {}> = {
   data: D;
   token: string;
   tokenDeathTime: number;
 };
+
+// export type CommonPacksResponseType =
+//   | PacksResponseType<{ item: CardPacksType }>
+//   | PUDResponseType<{ item: CardPacksType }>;
+// если не понадобится удалим
