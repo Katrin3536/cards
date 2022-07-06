@@ -2,9 +2,9 @@ import { AxiosError } from "axios";
 import { AppThunk } from "../store";
 import {
   CardPacksType,
-  getPacksCardsAPI,
+  getPacksAPI,
   PacksResponseType,
-} from "../../api/packsCards-api";
+} from "../../api/packs-api";
 import { appSetStatusAC } from "./app-reducer";
 import { handleNetworkError } from "../../utils/errorUtils";
 
@@ -12,14 +12,15 @@ import { handleNetworkError } from "../../utils/errorUtils";
 // 'idle' | 'succeeded' | 'failed' => preloader unvisible
 
 const initialState = {
-  packsCards: {
-    _id: null as null | string,
-    user_id: null as null | string,
-    name: null as null | string,
-    cardsCount: null as null | number,
-    created: null as null | string,
-    updated: null as null | string,
-  },
+  // packsCards: {
+  //   _id: null as null | string,
+  //   user_id: null as null | string,
+  //   name: null as null | string,
+  //   cardsCount: null as null | number,
+  //   created: null as null | string,
+  //   updated: null as null | string,
+  // },
+  packsCards: [{}],
   cardPacksTotalCount: null as null | number,
   //   maxCardsCount: null as null | number,
   //   minCardsCount: null as null | number,
@@ -27,7 +28,7 @@ const initialState = {
   //   pageCount: null as null | number,
 };
 
-export const packsCardsReducer = (
+export const packsReducer = (
   state: InitialStateType = initialState,
   action: PacksActionsTypes
 ): InitialStateType => {
@@ -35,7 +36,7 @@ export const packsCardsReducer = (
     case "PACKS/get-one-page-packs":
       return {
         ...state,
-        packsCards: action.data.data.item,
+        packsCards: action.data.data.map((pack) => pack.item),
         cardPacksTotalCount: action.data.cardPacksTotalCount,
       };
 
@@ -57,7 +58,7 @@ export const getPacksListTC =
   async (dispatch) => {
     try {
       dispatch(appSetStatusAC("loading"));
-      const response = await getPacksCardsAPI.getPacksList(page, pageCount);
+      const response = await getPacksAPI.getPacksList(page, pageCount);
       if (response.status === 200) {
         dispatch(getPacksCardsAC(response.data.data));
       }
@@ -74,7 +75,7 @@ export const getUserPacksListTC =
   async (dispatch) => {
     try {
       dispatch(appSetStatusAC("loading"));
-      const response = await getPacksCardsAPI.getUserPacksList(
+      const response = await getPacksAPI.getUserPacksList(
         page,
         pageCount,
         userID
@@ -95,7 +96,7 @@ export const getRangeredPacksListTC =
   async (dispatch) => {
     try {
       dispatch(appSetStatusAC("loading"));
-      const response = await getPacksCardsAPI.getRangeredPacksList(
+      const response = await getPacksAPI.getRangeredPacksList(
         page,
         pageCount,
         min,
@@ -117,7 +118,7 @@ export const getSortPacksListTC =
   async (dispatch) => {
     try {
       dispatch(appSetStatusAC("loading"));
-      const response = await getPacksCardsAPI.getSortPacksList(page, pageCount);
+      const response = await getPacksAPI.getSortPacksList(page, pageCount);
       if (response.status === 200) {
         dispatch(getPacksCardsAC(response.data.data));
       }
@@ -140,11 +141,7 @@ export const addPackTC =
   async (dispatch) => {
     try {
       dispatch(appSetStatusAC("loading"));
-      const response = await getPacksCardsAPI.addPack(
-        name,
-        deckCover,
-        _private
-      );
+      const response = await getPacksAPI.addPack(name, deckCover, _private);
       if (response.status === 200) {
         dispatch(getPacksListTC(page, pageCount));
       }
@@ -161,7 +158,7 @@ export const deletePackTC =
   async (dispatch) => {
     try {
       dispatch(appSetStatusAC("loading"));
-      const response = await getPacksCardsAPI.deletePack(packID);
+      const response = await getPacksAPI.deletePack(packID);
       if (response.status === 200) {
         dispatch(getPacksListTC(page, pageCount));
       }
@@ -183,7 +180,7 @@ export const updatePackNameTC =
   async (dispatch) => {
     try {
       dispatch(appSetStatusAC("loading"));
-      const response = await getPacksCardsAPI.updatePackName(packID, newTitile);
+      const response = await getPacksAPI.updatePackName(packID, newTitile);
       if (response.status === 200) {
         dispatch(getPacksListTC(page, pageCount));
       }

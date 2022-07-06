@@ -22,10 +22,8 @@ import {
   ProfileActionsTypes,
   profileReducer,
 } from "./reducers/profile-reducer";
-import {
-  PacksActionsTypes,
-  packsCardsReducer,
-} from "./reducers/packsCards-reducer";
+import { PacksActionsTypes, packsReducer } from "./reducers/packs-reducer";
+import { CardsActionsTypes } from "./reducers/cards-reducer";
 
 let rootReducer = combineReducers({
   authorization: authReducer,
@@ -33,7 +31,7 @@ let rootReducer = combineReducers({
   app: appReducer,
   recoveryPass: forgotReducer,
   profile: profileReducer,
-  packs: packsCardsReducer,
+  packs: packsReducer,
 });
 
 export const store = createStore(
@@ -48,7 +46,8 @@ export type AppRootActionsType =
   | ForgotPassActionsType
   | ProfileActionsTypes
   | RegisterActionsType
-  | PacksActionsTypes;
+  | PacksActionsTypes
+  | CardsActionsTypes;
 
 // SELECTOR TYPE
 

@@ -5,7 +5,7 @@ export const instance = axios.create({
   withCredentials: true,
 });
 
-export const getPacksCardsAPI = {
+export const getPacksAPI = {
   getUserPacksList(page: number, pageCount: number = 8, userID: string) {
     return instance.get<
       AxiosResponse<PacksResponseType<{ item: CardPacksType }>>
@@ -100,7 +100,7 @@ export type CardPacksType = {
 };
 
 export type PacksResponseType<D = {}> = {
-  data: D;
+  data: Array<D>;
   cardPacksTotalCount: number;
   maxCardsCount: number;
   minCardsCount: number;
@@ -113,8 +113,3 @@ export type PUDResponseType<D = {}> = {
   token: string;
   tokenDeathTime: number;
 };
-
-// export type CommonPacksResponseType =
-//   | PacksResponseType<{ item: CardPacksType }>
-//   | PUDResponseType<{ item: CardPacksType }>;
-// если не понадобится удалим
