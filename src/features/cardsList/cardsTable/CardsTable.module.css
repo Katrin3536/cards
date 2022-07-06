@@ -6,6 +6,10 @@
     margin: auto;
     padding: 16px;
 
-    background: #FEFEFF;
+    background: rgba(184, 184, 227, 0.71);
     border-radius: 8px;
+}
+
+.table-container {
+    height: 484px;
 }

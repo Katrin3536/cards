@@ -1,5 +1,4 @@
 import * as React from 'react';
-import {alpha} from '@mui/material/styles';
 import Box from '@mui/material/Box';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
@@ -12,26 +11,25 @@ import TableSortLabel from '@mui/material/TableSortLabel';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 import Paper from '@mui/material/Paper';
-import IconButton from '@mui/material/IconButton';
-import Tooltip from '@mui/material/Tooltip';
-import DeleteIcon from '@mui/icons-material/Delete';
-import FilterListIcon from '@mui/icons-material/FilterList';
 import {visuallyHidden} from '@mui/utils';
 import ArrowBackOutlinedIcon from '@mui/icons-material/ArrowBackOutlined';
 import Button from '@mui/material/Button';
 import GradeIcon from '@mui/icons-material/Grade';
 import style from './CardsTable.module.css';
+import {Link, useNavigate} from 'react-router-dom';
+import {PATH} from '../../../components/common/routes/RoutesConstants';
 
 interface Data {
     question: string,
     answer: string,
-    lastUpdated: string,
+    lastUpdated: Date,
     grade: string,
 }
+
 function createData(
     question: string,
     answer: string,
-    lastUpdated: string,
+    lastUpdated: Date,
     grade: string,
 ): Data {
     return {
@@ -42,16 +40,17 @@ function createData(
     };
 }
 
+
 const rows = [
-    createData('What is WebWorker?', 'It is a service...', new Date().toLocaleDateString(), "star"),
-    createData('What is WebWorker?', 'It is a service...', new Date().toLocaleDateString(), "star"),
-    createData('What is WebWorker?', 'It is a service...', new Date("15/05/22").toLocaleDateString(), "star"),
-    createData('What is WebWorker?', 'It is a service...', new Date().toLocaleDateString(), "star"),
-    createData('What is WebWorker?', 'It is a service...', new Date("23/05/22").toLocaleDateString(), "star"),
-    createData('What is WebWorker?', 'It is a service...', new Date().toLocaleDateString(), "star"),
-    createData('What is WebWorker?', 'It is a service...', new Date().toLocaleDateString(), "star"),
-    createData('What is WebWorker?', 'It is a service...', new Date().toLocaleDateString(), "star"),
-    createData('What is WebWorker?', 'It is a service...', new Date().toLocaleDateString(), "star"),
+    createData('What is WebWorker?', 'It is a service...', new Date('7/6/2022')/*.toLocaleDateString()*/, 'star'),
+    createData('What is WebWorker?', 'It is a service...', new Date('6/6/2022')/*.toLocaleDateString()*/, 'star'),
+    createData('What is WebWorker?', 'It is a service...', new Date('11/5/2022')/*.toLocaleDateString()*/, 'star'),
+    createData('What is WebWorker?', 'It is a service...', new Date('3/3/2022')/*.toLocaleDateString()*/, 'star'),
+    createData('What is WebWorker?', 'It is a service...', new Date('6/2/2022')/*.toLocaleDateString()*/, 'star'),
+    createData('What is WebWorker?', 'It is a service...', new Date('12/17/2021')/*.toLocaleDateString()*/, 'star'),
+    createData('What is WebWorker?', 'It is a service...', new Date('1/24/2022')/*.toLocaleDateString()*/, 'star'),
+    createData('What is WebWorker?', 'It is a service...', new Date('9/5/2022')/*.toLocaleDateString()*/, 'star'),
+    createData('What is WebWorker?', 'It is a service...', new Date('1/1/2022')/*.toLocaleDateString()*/, 'star'),
 ];
 
 function descendingComparator<T>(a: T, b: T, orderBy: keyof T) {
@@ -94,48 +93,46 @@ interface HeadCell {
     disablePadding: boolean;
     id: keyof Data;
     label: string;
-    numeric: boolean;
-    sortable?:boolean
+    textAlign: 'left' | 'center' | 'right' | 'justify' | 'inherit' | undefined;
+    sortable?: boolean;
 }
 
 const headCells: readonly HeadCell[] = [
     {
         id: 'question',
-        numeric: false,
+        textAlign: 'left',
         disablePadding: false,
         label: 'Question',
     },
     {
         id: 'answer',
-        numeric: true,
-        disablePadding: false,
+        textAlign: 'left',
+        disablePadding: true,
         label: 'Answer',
     },
     {
         id: 'lastUpdated',
-        numeric: true,
-        disablePadding: false,
+        textAlign: 'right',
+        disablePadding: true,
         label: 'Last Updated',
         sortable: true,
     },
     {
         id: 'grade',
-        numeric: true,
+        textAlign: 'center',
         disablePadding: false,
         label: 'Grade',
     },
 ];
 
 interface EnhancedTableProps {
-    numSelected: number;
     onRequestSort: (event: React.MouseEvent<unknown>, property: keyof Data) => void;
     order: Order;
     orderBy: string;
-    rowCount: number;
 }
 
 function EnhancedTableHead(props: EnhancedTableProps) {
-    const { order, orderBy, numSelected, rowCount, onRequestSort} =
+    const {order, orderBy, onRequestSort} =
         props;
     const createSortHandler =
         (property: keyof Data) => (event: React.MouseEvent<unknown>) => {
@@ -148,8 +145,8 @@ function EnhancedTableHead(props: EnhancedTableProps) {
                 {headCells.map((headCell) => (
                     <TableCell
                         key={headCell.id}
-                        align={headCell.numeric ? 'right' : 'left'}
-                        padding={headCell.disablePadding ? 'none' : 'normal'}
+                        align={headCell.textAlign}
+                        padding="normal"
                         sortDirection={orderBy === headCell.id ? order : false}
                     >
                         {headCell.sortable ?
@@ -174,27 +171,15 @@ function EnhancedTableHead(props: EnhancedTableProps) {
     );
 }
 
-interface EnhancedTableToolbarProps {
-    numSelected: number;
-}
-
-const EnhancedTableToolbar = (props: EnhancedTableToolbarProps) => {
-    const {numSelected} = props;
+const EnhancedTableToolbar = () => {
 
     return (
-        <Toolbar
-            sx={{
-                pl: {sm: 2},
-                pr: {xs: 1, sm: 1},
-                ...(numSelected > 0 && {
-                    bgcolor: (theme) =>
-                        alpha(theme.palette.primary.main, theme.palette.action.activatedOpacity),
-                }),
-            }}
-        >
-            <Button style={{marginRight: "10px"}}>
-                <ArrowBackOutlinedIcon/>
-            </Button>
+        <Toolbar>
+            <Link to={PATH.REGISTRATION}>
+                <Button style={{marginRight: '10px'}}>
+                    <ArrowBackOutlinedIcon/>
+                </Button>
+            </Link>
             <Typography
                 sx={{flex: '1 1 100%'}}
                 variant="h6"
@@ -209,10 +194,11 @@ const EnhancedTableToolbar = (props: EnhancedTableToolbarProps) => {
 
 export const CardsTable = () => {
     const [order, setOrder] = React.useState<Order>('asc');
-    const [orderBy, setOrderBy] = React.useState<keyof Data>('answer');
-    const [selected, setSelected] = React.useState<readonly string[]>([]);
+    const [orderBy, setOrderBy] = React.useState<keyof Data>('lastUpdated');
     const [page, setPage] = React.useState(0);
     const [rowsPerPage, setRowsPerPage] = React.useState(5);
+
+    const navigate = useNavigate();
 
     const handleRequestSort = (
         event: React.MouseEvent<unknown>,
@@ -223,7 +209,6 @@ export const CardsTable = () => {
         setOrderBy(property);
     };
 
-
     const handleChangePage = (event: unknown, newPage: number) => {
         setPage(newPage);
     };
@@ -233,61 +218,61 @@ export const CardsTable = () => {
         setPage(0);
     };
 
-    const isSelected = (name: string) => selected.indexOf(name) !== -1;
-
-    // Avoid a layout jump when reaching the last page with empty rows.
-
-    const labelDisplayedRows = ({ from, to, count }: any) => {
-        console.log(from, to , count, rows.length);
-       return  `${page+1} of ${Math.ceil(count / rowsPerPage)}`;
-    }
+    const labelDisplayedRows = ({from, to, count}: any) => {
+        console.log(from, to, count, rows.length);
+        return `${page + 1} of ${Math.ceil(count / rowsPerPage)}`;
+    };
 
     return (
         <Box className={style.container}>
+            <EnhancedTableToolbar/>
+            <input type={'text'} placeholder={'Search...'} style={{margin: '0 0 16px 0'}}/>
             <Paper sx={{width: '100%', mb: 5}}>
-                <EnhancedTableToolbar numSelected={selected.length}/>
-                <TableContainer>
+                <TableContainer className={style[`table-container`]}>
                     <Table
                         sx={{minWidth: 750}}
                         aria-labelledby="tableTitle"
                         size={'medium'}
                     >
                         <EnhancedTableHead
-                            numSelected={selected.length}
                             order={order}
                             orderBy={orderBy}
                             onRequestSort={handleRequestSort}
-                            rowCount={rows.length}
                         />
                         <TableBody>
-                            {/* if you don't need to support IE11, you can replace the `stableSort` call with:
-              rows.slice().sort(getComparator(order, orderBy)) */}
                             {stableSort<Data>(rows, getComparator(order, orderBy))
                                 .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                                 .map((row, index) => {
-                                    const isItemSelected = isSelected(row.question);
                                     const labelId = `enhanced-table-checkbox-${index}`;
 
                                     return (
                                         <TableRow
                                             hover
-                                            role="checkbox"
-                                            aria-checked={isItemSelected}
-                                            tabIndex={-1}
                                             key={row.question}
-                                            selected={isItemSelected}>
+                                            onClick={()=> navigate(PATH.PROFILE, {
+                                                state: { question: row.question, answer: row.answer }})
+                                            }>
                                             <TableCell
                                                 component="th"
                                                 id={labelId}
                                                 scope="row"
-                                                padding="none"
+                                                padding="normal"
+                                                align={headCells.find(cell => cell.id === 'question')?.textAlign}
                                             >
                                                 {row.question}
                                             </TableCell>
-                                            <TableCell align="right">{row.answer}</TableCell>
-                                            <TableCell align="right">{row.lastUpdated}</TableCell>
-                                            <TableCell align="right">
-                                                <GradeIcon fontSize="small"/>
+                                            <TableCell
+                                                padding="normal"
+                                                align={headCells.find(cell => cell.id === 'answer')?.textAlign}>{row.answer}</TableCell>
+                                            <TableCell
+                                                padding="normal"
+                                                align={headCells.find(cell => cell.id === 'lastUpdated')?.textAlign}>
+                                                {row.lastUpdated.toLocaleDateString()}
+                                            </TableCell>
+                                            <TableCell
+                                                padding="normal"
+                                                align={headCells.find(cell => cell.id === 'grade')?.textAlign}>
+                                                <GradeIcon style={{color: 'rgba(33, 38, 143, 1)'}} fontSize="small"/>
                                                 <GradeIcon fontSize="small"/>
                                                 <GradeIcon fontSize="small"/>
                                                 <GradeIcon fontSize="small"/>
