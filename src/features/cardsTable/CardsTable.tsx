@@ -21,6 +21,7 @@ import { PATH } from "../../components/common/routes/RoutesConstants";
 import { useLocation } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../../bll/store";
 import { getCardsListTC } from "../../bll/reducers/cards-reducer";
+import {SearchForm} from '../searchForm/SearchForm';
 
 interface Data {
   question: string;
@@ -229,11 +230,7 @@ export const CardsTable = () => {
   return (
     <Box className={style.container}>
       <EnhancedTableToolbar />
-      <input
-        type={"text"}
-        placeholder={"Search..."}
-        style={{ margin: "0 0 16px 0" }}
-      />
+      <SearchForm />
       <Paper sx={{ width: "100%", mb: 5 }}>
         <TableContainer className={style[`table-container`]}>
           <Table

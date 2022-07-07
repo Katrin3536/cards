@@ -228,11 +228,6 @@ export function PacksTable() {
                     <TableRow
                       hover
                       key={index}
-                      onClick={() =>
-                        navigate(PATH.CARDS_LIST, {
-                          state: { pack_id: card._id },
-                        })
-                      }
                     >
                       <TableCell
                         component="th"
@@ -242,6 +237,11 @@ export function PacksTable() {
                         align={
                           headCells.find((cell) => cell.id === "name")
                             ?.textAlign
+                        }
+                        onClick={() =>
+                            navigate(PATH.CARDS_LIST, {
+                              state: { pack_id: card._id },
+                            })
                         }
                         style={{ paddingLeft: "30px" }}
                       >
