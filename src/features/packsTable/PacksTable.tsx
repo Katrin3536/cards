@@ -17,7 +17,7 @@ import CreateIcon from "@mui/icons-material/Create";
 import ApiIcon from "@mui/icons-material/Api";
 import { visuallyHidden } from "@mui/utils";
 import TablePagination from "@mui/material/TablePagination";
-import { getPacksListTC } from "../../bll/reducers/packs-reducer";
+import {deletePackTC, getPacksListTC, updatePackNameTC} from "../../bll/reducers/packs-reducer";
 import { PATH } from "../../components/common/routes/RoutesConstants";
 import { useNavigate } from "react-router-dom";
 
@@ -204,6 +204,14 @@ export function PacksTable() {
     return `${page + 1} of ${Math.ceil(count / rowsPerPage)}`;
   };
 
+  const putPackTableHandler = () => {
+    dispatch(updatePackNameTC(1,1,'62c70d79a03a463458265e45', 'newTitle'))
+  }
+
+  const deletePackHandler = () => {
+    dispatch(deletePackTC(1,1,'62c70d79a03a463458265e45'))
+  }
+
   return (
     <Box sx={{ width: "100%" }}>
       <Paper>
@@ -279,10 +287,10 @@ export function PacksTable() {
                           <ApiIcon />
                         </IconButton>
                         <IconButton>
-                          <Delete />
+                          <Delete onClick={deletePackHandler}/>
                         </IconButton>
                         <IconButton>
-                          <CreateIcon />
+                          <CreateIcon onClick={putPackTableHandler}/>
                         </IconButton>
                       </TableCell>
                     </TableRow>
