@@ -10,6 +10,7 @@ import { Box } from "@mui/material";
 import { PacksTable } from "./PacksTable";
 import style from "./PacksTableContainer.module.css";
 import { SearchForm } from "../searchForm/SearchForm";
+import {addPackTC} from "../../bll/reducers/packs-reducer";
 
 const ariaLabel = { "aria-label": "description" };
 
@@ -26,6 +27,10 @@ export const PacksTableContainer: React.FC = () => {
   //   dispatch(getCardsListTC());
   // };
 
+  const addNewPackHandler = () => {
+    dispatch(addPackTC(1,1,'NEW','2112',false))
+  }
+
   return (
     <>
       {status === "loading" && <LinearProgress />}
@@ -41,7 +46,7 @@ export const PacksTableContainer: React.FC = () => {
             <h4 className={style.rightTitle}>Packs list</h4>
             <div>
               <SearchForm />
-              <button>add new pack</button>
+              <button onClick={addNewPackHandler}>add new pack</button>
             </div>
             <PacksTable />
           </Grid>
