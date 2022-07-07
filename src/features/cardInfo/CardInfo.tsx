@@ -4,8 +4,6 @@ import commonStyle from "../../assets/styles/Common.module.css";
 import { Button } from "@mui/material";
 import { useLocation } from "react-router-dom";
 
-// let { email } = location.state as propState;
-
 export const CardInfo: React.FC = () => {
   interface LocationType {
     question: string;
@@ -13,7 +11,6 @@ export const CardInfo: React.FC = () => {
   }
 
   const location = useLocation();
-  console.log(location);
   let { question, answer } = location.state as LocationType;
 
   return (

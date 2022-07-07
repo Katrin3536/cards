@@ -8,8 +8,17 @@ import { handleNetworkError } from "../../utils/errorUtils";
 // 'idle' | 'succeeded' | 'failed' => preloader unvisible
 
 const initialState = {
-  packsCards: [{}],
-  cardPacksTotalCount: null as null | number,
+  packsCards: [
+    {
+      _id: "",
+      user_id: "",
+      name: "",
+      cardsCount: 0,
+      created: "",
+      updated: "",
+    },
+  ],
+  cardPacksTotalCount: 0,
 };
 
 export const packsReducer = (

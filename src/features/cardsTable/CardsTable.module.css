@@ -1,0 +1,11 @@
+.container {
+    width: 80%;
+    /* height: 636px; */
+    left: 136px;
+    top: 84px;
+    margin: 40px auto;
+    padding: 16px;
+    background: #FEFEFF;
+    border-radius: 8px;
+    box-shadow: 1px 7px 33px 9px rgba(34, 60, 80, 0.2);
+}
