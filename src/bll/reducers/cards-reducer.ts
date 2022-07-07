@@ -35,7 +35,6 @@ export const cardsReducer = (
 ): InitialStateType => {
   switch (action.type) {
     case "CARDS/get-one-page-cards": {
-      console.log(action.data);
       return {
         ...state,
         cards: action.data.cards,

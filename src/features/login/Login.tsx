@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {memo, useCallback, useState} from 'react';
 import {useFormik} from 'formik';
 import {PATH} from '../../components/common/routes/RoutesConstants';
 import {Navigate, useNavigate} from 'react-router-dom';
@@ -35,7 +35,6 @@ export const Login: React.FC = () => {
             password: '',
             rememberMe: false,
         },
-
         validate: (values) => {
 
             const errors: FormikErrorType = {};
@@ -56,7 +55,6 @@ export const Login: React.FC = () => {
 
             return errors;
         },
-
         onSubmit: (values) => {
             dispatch(loginTC(values));
             formik.resetForm();
@@ -65,11 +63,11 @@ export const Login: React.FC = () => {
 
     const handleClickShowPassword = () => {
         setShowPassword(!showPassword);
-    };
+    }
 
     const handleMouseDownPassword = (event: React.MouseEvent<HTMLButtonElement>) => {
         event.preventDefault();
-    };
+    }
 
     const disableBtn =
         status === 'loading'
@@ -175,7 +173,7 @@ export const Login: React.FC = () => {
             </Grid>
         </>
     );
-};
+}
 
 // ==== TYPES ====
 

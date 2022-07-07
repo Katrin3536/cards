@@ -1,0 +1,31 @@
+.wrapper {
+    margin: auto 33px;
+}
+
+.infoItem {
+    text-align: left;
+    border-bottom: 1px solid black;
+    margin-bottom: 48px;
+}
+
+.label {
+    font-size: 13px;
+    line-height: 25px;
+    color: #24254A;
+    opacity: 0.5;
+}
+
+.title {
+font-size: 16px;
+line-height: 19px;
+margin-bottom: 7px;
+}
+
+.controls {
+    padding: 60px 0;
+}
+
+.btn {
+    display: flex;
+    justify-content: space-between;
+}
