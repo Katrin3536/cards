@@ -6,9 +6,9 @@ export const instance = axios.create({
 });
 
 export const getCardsAPI = {
-  getCardsList(page: number, pageCount: number = 8, cardsPackID: string) {
+  getCardsList(cardsPackID: string, cardsCount:number) {
     return instance.get<any, AxiosResponse<CardsResponseType>, any>(
-      `cards/card?page=${page}&pageCount=${pageCount}&cardsPack_id=${cardsPackID}`
+      `cards/card?cardsPack_id=${cardsPackID}&pageCount=${cardsCount}`
     );
   },
 

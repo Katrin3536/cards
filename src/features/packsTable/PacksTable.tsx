@@ -240,7 +240,7 @@ export function PacksTable() {
                         }
                         onClick={() =>
                             navigate(PATH.CARDS_LIST, {
-                              state: { pack_id: card._id },
+                              state: { pack_id: card._id, cardsCount: card.cardsCount },
                             })
                         }
                         style={{ paddingLeft: "30px" }}

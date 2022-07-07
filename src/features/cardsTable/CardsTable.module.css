@@ -9,3 +9,6 @@
     border-radius: 8px;
     box-shadow: 1px 7px 33px 9px rgba(34, 60, 80, 0.2);
 }
+.table-container{
+    height: 500px;
+}

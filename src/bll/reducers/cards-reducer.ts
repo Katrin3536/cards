@@ -56,14 +56,13 @@ export const getCardsAC = (data: CardsResponseType) =>
 // ==== THUNKS =====
 
 export const getCardsListTC =
-  (page: number, pageCount: number, cardsPackID: string): AppThunk =>
+  (cardsPackID: string, cardsCount: number): AppThunk =>
   async (dispatch) => {
     try {
       dispatch(appSetStatusAC("loading"));
       const response = await getCardsAPI.getCardsList(
-        page,
-        pageCount,
-        cardsPackID
+        cardsPackID,
+          cardsCount
       );
       if (response.status === 200) {
         dispatch(getCardsAC(response.data));
@@ -121,7 +120,8 @@ export const addCardTC =
     pageCount: number,
     question: string,
     answer: string,
-    cardsPack_id: string
+    cardsPack_id: string,
+    cardsCount:number
   ): AppThunk =>
   async (dispatch) => {
     try {
@@ -132,7 +132,7 @@ export const addCardTC =
         cardsPack_id
       );
       if (response.status === 200) {
-        dispatch(getCardsListTC(page, pageCount, cardsPack_id));
+        dispatch(getCardsListTC(cardsPack_id, cardsCount));
       }
     } catch (e) {
       const err = e as Error | AxiosError<{ error: string }>;
@@ -147,14 +147,15 @@ export const deleteCardTC =
     page: number,
     pageCount: number,
     cardsPackID: string,
-    cardID: string
+    cardID: string,
+    cardsCount:number,
   ): AppThunk =>
   async (dispatch) => {
     try {
       dispatch(appSetStatusAC("loading"));
       const response = await getCardsAPI.deleteCard(cardID);
       if (response.status === 200) {
-        dispatch(getCardsListTC(page, pageCount, cardsPackID));
+        dispatch(getCardsListTC(cardsPackID, cardsCount));
       }
     } catch (e) {
       const err = e as Error | AxiosError<{ error: string }>;
@@ -171,7 +172,8 @@ export const updateCardTC =
     cardsPackID: string,
     cardID: string,
     newQuestion: string,
-    newAnswer: string
+    newAnswer: string,
+    cardsCount:number
   ): AppThunk =>
   async (dispatch) => {
     try {
@@ -179,10 +181,10 @@ export const updateCardTC =
       const response = await getCardsAPI.updateCard(
         cardID,
         newQuestion,
-        newAnswer
+        newAnswer,
       );
       if (response.status === 200) {
-        dispatch(getCardsListTC(page, pageCount, cardsPackID));
+        dispatch(getCardsListTC(cardsPackID,cardsCount));
       }
     } catch (e) {
       const err = e as Error | AxiosError<{ error: string }>;
