@@ -31,7 +31,7 @@ export const PacksTableContainer: React.FC = () => {
   };
 
   const getAllPacks = () => {
-    dispatch(getPacksListTC(1, 5)); //Не передавал соответсвующие переменные так как при нажатии отобразить нужно только первую страницу
+    dispatch(getPacksListTC(1, 5));
   };
 
   return (
