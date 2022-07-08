@@ -21,6 +21,8 @@ import { PATH } from "../../components/common/routes/RoutesConstants";
 import { useLocation } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../../bll/store";
 import { getCardsListTC } from "../../bll/reducers/cards-reducer";
+import { InputAdornment, TextField } from "@mui/material";
+import SearchIcon from "@mui/icons-material/Search";
 import {SearchForm} from '../searchForm/SearchForm';
 import LinearProgress from '@mui/material/LinearProgress';
 import {appStatusSelect} from '../../bll/reducers/app-reducer';
@@ -216,7 +218,6 @@ export const CardsTable = () => {
   };
 
   const handleChangePage = (event: unknown, newPage: number) => {
-    console.log('== handleChangePage ==', newPage);
     setPage(newPage);
   };
 
@@ -234,11 +235,39 @@ export const CardsTable = () => {
 
   console.log('-----', cardsSelector);
 
+  // ==== SEARCHING =====
+
+  const [value, setValue] = React.useState("");
+
+  const filteredData = cardsSelector.filter((card) =>
+    card.question.toLowerCase().includes(value.toLowerCase())
+  );
+
+  const onChangeHandler = (
+    event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
+    setValue(event.target.value);
+  };
+
   return (
       <> {status === "loading" && <LinearProgress />}
     <Box className={style.container}>
       <EnhancedTableToolbar />
-      <SearchForm />
+      <div style={{ marginBottom: "20px" }}>
+        <TextField
+          fullWidth={true}
+          size={"small"}
+          InputProps={{
+            type: "search",
+            startAdornment: (
+              <InputAdornment position="start">
+                <SearchIcon />
+              </InputAdornment>
+            ),
+          }}
+          onChange={onChangeHandler}
+        />
+      </div>
       <Paper sx={{ width: "100%", mb: 5 }}>
         <TableContainer className={style[`table-container`]}>
           <Table
@@ -252,7 +281,7 @@ export const CardsTable = () => {
               onRequestSort={handleRequestSort}
             />
             <TableBody>
-              {stableSort(cardsSelector, getComparator(order, orderBy))
+              {stableSort(filteredData, getComparator(order, orderBy))
                 .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                 .map((row, index) => {
                   const labelId = `enhanced-table-checkbox-${index}`;
@@ -262,9 +291,18 @@ export const CardsTable = () => {
                       hover
                       key={index}
                       onClick={() =>
-                        navigate(PATH.CARD_INFO, {
-                          state: { question: row.question, answer: row.answer },
-                        })
+                        navigate(
+                          PATH.CARD_INFO,
+
+                          {
+                            // replace: true,
+                            state: {
+                              question: row.question,
+                              answer: row.answer,
+                              pack_id: pack_id,
+                            },
+                          }
+                        )
                       }
                     >
                       <TableCell

@@ -9,7 +9,6 @@ import Error404 from "../../error404/Error404";
 import { NewPassword } from "../../../features/newPassword/NewPassword";
 import { Login } from "../../../features/login/Login";
 import { CardInfo } from "../../../features/cardInfo/CardInfo";
-import { SearchForm } from "../../../features/searchForm/SearchForm";
 import { PacksTableContainer } from "../../../features/packsTable/PacksTableContainer";
 import { CardsTable } from "../../../features/cardsTable/CardsTable";
 
@@ -25,7 +24,6 @@ export const PATH = {
   PACKS_LIST: "/packs-list",
   CARDS_LIST: "/cards-list",
   CARD_INFO: "/card-info",
-  SEARCH_FORM: "/search-form", //потом удалить
 };
 
 export const RoutesConstants: React.FC = () => {
@@ -48,8 +46,6 @@ export const RoutesConstants: React.FC = () => {
         <Route path={PATH.PACKS_LIST} element={<PacksTableContainer />} />
         <Route path={PATH.CARDS_LIST} element={<CardsTable />} />
         <Route path={PATH.CARD_INFO} element={<CardInfo />} />
-        <Route path={PATH.SEARCH_FORM} element={<SearchForm />} />
-        {/* Потом удалить */}
       </Routes>
     </div>
   );

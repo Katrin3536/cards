@@ -2,16 +2,22 @@ import React from "react";
 import style from "./CardInfo.module.css";
 import commonStyle from "../../assets/styles/Common.module.css";
 import { Button } from "@mui/material";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
+import { PATH } from "../../components/common/routes/RoutesConstants";
 
 export const CardInfo: React.FC = () => {
+  const navigate = useNavigate();
+
   interface LocationType {
     question: string;
     answer: string;
+    pack_id: string;
   }
 
   const location = useLocation();
-  let { question, answer } = location.state as LocationType;
+  let { question, answer, pack_id } = location.state as LocationType;
+
+  console.log(pack_id);
 
   return (
     <div className={commonStyle.container}>
@@ -21,11 +27,11 @@ export const CardInfo: React.FC = () => {
         </div>
         <div className={style.infoItem}>
           <span className={style.label}>Question</span>
-          <h4 className={style.title}>{question}</h4>
+          <h4 className={style.title}>{question.slice(0, 40)}</h4>
         </div>
         <div className={style.infoItem}>
           <span className={style.label}>Answer</span>
-          <h4 className={style.title}>{answer}</h4>
+          <h4 className={style.title}>{answer.slice(0, 40)}</h4>
         </div>
         <div className={style.controls}>
           <div className={style.btn}>
@@ -34,7 +40,7 @@ export const CardInfo: React.FC = () => {
               variant={"contained"}
               color={"primary"}
               style={{ width: "30%" }}
-              disabled={true}
+              onClick={() => navigate(PATH.CARDS_LIST, { state: pack_id })}
             >
               Cancel
             </Button>

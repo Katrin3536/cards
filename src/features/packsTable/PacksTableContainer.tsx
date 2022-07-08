@@ -6,30 +6,33 @@ import Grid from "@mui/material/Grid";
 import LinearProgress from "@mui/material/LinearProgress";
 import { isLoggedInSelector } from "../../bll/reducers/auth-reducer";
 import { appStatusSelect } from "../../bll/reducers/app-reducer";
-import { Box } from "@mui/material";
+import { Box, Button } from "@mui/material";
 import { PacksTable } from "./PacksTable";
 import style from "./PacksTableContainer.module.css";
-import { SearchForm } from "../searchForm/SearchForm";
-import {addPackTC} from "../../bll/reducers/packs-reducer";
-
-const ariaLabel = { "aria-label": "description" };
+import { userIDSelect } from "../../bll/reducers/profile-reducer";
+import {
+  getUserPacksListTC,
+  getPacksListTC,
+} from "../../bll/reducers/packs-reducer";
 
 export const PacksTableContainer: React.FC = () => {
   const dispatch = useAppDispatch();
+
   const isLoggedIn = useAppSelector(isLoggedInSelector);
   const status = useAppSelector(appStatusSelect);
+  const userID = useAppSelector(userIDSelect);
 
   if (!isLoggedIn) {
     return <Navigate to={PATH.LOGIN} />;
   }
 
-  // const onClickHandler = () => {
-  //   dispatch(getCardsListTC());
-  // };
+  const getMyPacks = () => {
+    dispatch(getUserPacksListTC(userID));
+  };
 
-  const addNewPackHandler = () => {
-    dispatch(addPackTC(1,1,'NEW','2112',false))
-  }
+  const getAllPacks = () => {
+    dispatch(getPacksListTC(1, 5)); //Не передавал соответсвующие переменные так как при нажатии отобразить нужно только первую страницу
+  };
 
   return (
     <>
@@ -38,16 +41,21 @@ export const PacksTableContainer: React.FC = () => {
         <Grid container justifyContent="center" spacing={1}>
           <Grid item xs={2} className={style.leftSide}>
             <h4 className={style.leftTitle}>Show packs cards</h4>
-            <button>my</button>
-            {/* <button onClick={onClickHandler}>all</button> */}
+            <Button
+              variant="contained"
+              size={"small"}
+              style={{ marginRight: "10px" }}
+              onClick={getMyPacks}
+            >
+              my
+            </Button>
+            <Button variant="contained" size={"small"} onClick={getAllPacks}>
+              all
+            </Button>
           </Grid>
 
           <Grid item xs={10} className={style.rightSide}>
             <h4 className={style.rightTitle}>Packs list</h4>
-            <div>
-              <SearchForm />
-              <button onClick={addNewPackHandler}>add new pack</button>
-            </div>
             <PacksTable />
           </Grid>
         </Grid>
