@@ -1,12 +1,15 @@
-import React, { useEffect } from "react";
+import React, { ChangeEvent, useEffect, useState } from "react";
 import TableBody from "@mui/material/TableBody";
 import {
+  Button,
   IconButton,
+  InputAdornment,
   Paper,
   Table,
   TableContainer,
   TableHead,
   TableRow,
+  TextField,
 } from "@mui/material";
 import TableCell from "@mui/material/TableCell";
 import TableSortLabel from "@mui/material/TableSortLabel";
@@ -17,9 +20,17 @@ import CreateIcon from "@mui/icons-material/Create";
 import ApiIcon from "@mui/icons-material/Api";
 import { visuallyHidden } from "@mui/utils";
 import TablePagination from "@mui/material/TablePagination";
-import { getPacksListTC } from "../../bll/reducers/packs-reducer";
+import {
+  addPackTC,
+  deletePackTC,
+  getPacksListTC,
+  packsSelect,
+  totalPacksCountSelect,
+  updatePackNameTC,
+} from "../../bll/reducers/packs-reducer";
 import { PATH } from "../../components/common/routes/RoutesConstants";
 import { useNavigate } from "react-router-dom";
+import SearchIcon from "@mui/icons-material/Search";
 
 interface Data {
   id: string;
@@ -165,16 +176,14 @@ function EnhancedTableHead(props: EnhancedTableProps) {
 export function PacksTable() {
   const [order, setOrder] = React.useState<Order>("asc");
   const [orderBy, setOrderBy] = React.useState<keyof Data>("update");
-  const [page, setPage] = React.useState(0);
+  const [page, setPage] = React.useState(1);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
   const dispatch = useAppDispatch();
 
   const navigate = useNavigate();
 
-  const totalPacksCount = useAppSelector(
-    (state) => state.packs.cardPacksTotalCount
-  );
-  const packsSelector = useAppSelector((state) => state.packs.packsCards);
+  const totalPacksCount = useAppSelector(totalPacksCountSelect);
+  const packsSelector = useAppSelector(packsSelect);
 
   useEffect(() => {
     dispatch(getPacksListTC(page, rowsPerPage));
@@ -189,7 +198,10 @@ export function PacksTable() {
     setOrderBy(property);
   };
 
-  const handleChangePage = (event: unknown, newPage: number) => {
+  const handleChangePage = (
+    event: React.MouseEvent<HTMLButtonElement> | null,
+    newPage: number
+  ) => {
     setPage(newPage);
   };
 
@@ -197,16 +209,74 @@ export function PacksTable() {
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
     setRowsPerPage(parseInt(event.target.value, 10));
-    setPage(0);
+    setPage(1);
   };
 
   const labelDisplayedRows = ({ from, to, count }: any) => {
-    return `${page + 1} of ${Math.ceil(count / rowsPerPage)}`;
+    return `${page} of ${Math.ceil(count / rowsPerPage)}`;
+  };
+
+  // ==== SEARCHING =====
+
+  const [value, setValue] = useState("");
+
+  const filteredData = packsSelector.filter((pack) =>
+    pack.name.toLowerCase().includes(value.toLowerCase())
+  );
+
+  const onChangeHandler = (
+    event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
+    setValue(event.target.value);
+  };
+
+  // ==== ACTIONS ====
+
+  // ==== ADD NEW PACK ====
+
+  const addNewPackCallback = () => {
+    dispatch(addPackTC("Training card_2"));
+    dispatch(getPacksListTC(page, rowsPerPage));
+  };
+
+  // ==== DELETE PACK ====
+
+  const deletePackHandler = (packID: string) => {
+    dispatch(deletePackTC(packID));
+    dispatch(getPacksListTC(page, rowsPerPage));
+  };
+
+  // ==== UPDATE PACK NAME ====
+
+  const updatePackHandler = (packID: string) => {
+    dispatch(updatePackNameTC(packID, "Updated name"));
+    dispatch(getPacksListTC(page, rowsPerPage));
   };
 
   return (
     <Box sx={{ width: "100%" }}>
       <Paper>
+        <div style={{ marginBottom: "20px" }}>
+          <TextField
+            size={"small"}
+            InputProps={{
+              type: "search",
+              startAdornment: (
+                <InputAdornment position="start">
+                  <SearchIcon />
+                </InputAdornment>
+              ),
+            }}
+            onChange={onChangeHandler}
+          />
+          <Button
+            variant="contained"
+            style={{ marginLeft: "30px" }}
+            onClick={addNewPackCallback}
+          >
+            add new pack
+          </Button>
+        </div>
         <TableContainer>
           <Table
             sx={{ minWidth: 750 }}
@@ -219,21 +289,13 @@ export function PacksTable() {
               onRequestSort={handleRequestSort}
             />
             <TableBody>
-              {stableSort(packsSelector, getComparator(order, orderBy))
+              {stableSort(filteredData, getComparator(order, orderBy))
                 // .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                 .map((card, index) => {
                   const labelId = `enhanced-table-checkbox-${index}`;
 
                   return (
-                    <TableRow
-                      hover
-                      key={index}
-                      onClick={() =>
-                        navigate(PATH.CARDS_LIST, {
-                          state: { pack_id: card._id },
-                        })
-                      }
-                    >
+                    <TableRow hover key={index}>
                       <TableCell
                         component="th"
                         id={labelId}
@@ -243,9 +305,14 @@ export function PacksTable() {
                           headCells.find((cell) => cell.id === "name")
                             ?.textAlign
                         }
+                        onClick={() =>
+                          navigate(PATH.CARDS_LIST, {
+                            state: { pack_id: card._id },
+                          })
+                        }
                         style={{ paddingLeft: "30px" }}
                       >
-                        {card.name}
+                        {card.name.slice(0, 70)}
                       </TableCell>
                       <TableCell
                         padding="normal"
@@ -278,10 +345,10 @@ export function PacksTable() {
                         <IconButton>
                           <ApiIcon />
                         </IconButton>
-                        <IconButton>
+                        <IconButton onClick={() => deletePackHandler(card._id)}>
                           <Delete />
                         </IconButton>
-                        <IconButton>
+                        <IconButton onClick={() => updatePackHandler(card._id)}>
                           <CreateIcon />
                         </IconButton>
                       </TableCell>

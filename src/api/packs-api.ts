@@ -6,11 +6,18 @@ export const instance = axios.create({
 });
 
 export const getPacksAPI = {
-  getUserPacksList(page: number, pageCount: number = 8, userID: string) {
+  getAllPacksList(pageCount: number) {
     return instance.get<any, AxiosResponse<PacksResponseType>, any>(
-      `cards/pack?page=${page}&pageCount=${pageCount}&user_id=${userID}`
+      `cards/pack?pageCount=${pageCount}`
     );
   },
+
+  getUserPacksList(userID: string) {
+    return instance.get<any, AxiosResponse<PacksResponseType>, any>(
+      `cards/pack?user_id=${userID}`
+    );
+  },
+
   getPacksList(page: number, pageCount: number = 8) {
     return instance.get<any, AxiosResponse<PacksResponseType>, any>(
       `cards/pack?page=${page}&pageCount=${pageCount}`
@@ -34,14 +41,12 @@ export const getPacksAPI = {
     );
   },
 
-  addPack(name: string, deckCover: string = "", _private: boolean = false) {
+  addPack(name: string) {
     //response игнорируем, заново запрос колод!!!
 
     const data: AddPackPayloadType = {
       cardsPack: {
-        name: name,
-        deckCover: deckCover,
-        private: _private,
+        name,
       },
     };
     return instance.post<
