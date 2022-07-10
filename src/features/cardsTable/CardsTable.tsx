@@ -23,7 +23,6 @@ import { useAppDispatch, useAppSelector } from "../../bll/store";
 import { getCardsListTC } from "../../bll/reducers/cards-reducer";
 import { InputAdornment, TextField } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
-import {SearchForm} from '../searchForm/SearchForm';
 import LinearProgress from '@mui/material/LinearProgress';
 import {appStatusSelect} from '../../bll/reducers/app-reducer';
 
@@ -228,12 +227,10 @@ export const CardsTable = () => {
     setPage(0);
   };
 
-  const labelDisplayedRows = ({ from, to, count }: any) => {
+  const labelDisplayedRows = ({ from, to, count }: { from: number, to: number, count: number }) => {
     console.log('=======', from, to, count, cardsTotalCountSelector);
     return `${page+1} of ${Math.ceil(count / rowsPerPage)}`;
   };
-
-  console.log('-----', cardsSelector);
 
   // ==== SEARCHING =====
 
