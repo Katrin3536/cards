@@ -23,6 +23,8 @@ import { useAppDispatch, useAppSelector } from "../../bll/store";
 import { getCardsListTC } from "../../bll/reducers/cards-reducer";
 import { InputAdornment, TextField } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
+import LinearProgress from '@mui/material/LinearProgress';
+import {appStatusSelect} from '../../bll/reducers/app-reducer';
 
 interface Data {
   question: string;
@@ -180,7 +182,7 @@ const EnhancedTableToolbar = () => {
 export const CardsTable = () => {
   const [order, setOrder] = React.useState<Order>("asc");
   const [orderBy, setOrderBy] = React.useState<keyof Data>("lastUpdated");
-  const [page, setPage] = React.useState(1);
+  const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
 
   const navigate = useNavigate();
@@ -190,17 +192,20 @@ export const CardsTable = () => {
   const cardsTotalCountSelector = useAppSelector(
     (state) => state.cards.cardsTotalCount
   );
+  console.log(cardsTotalCountSelector);
+  const status = useAppSelector(appStatusSelect)
 
   interface LocationType {
     pack_id: string;
+    cardsCount: number
   }
 
   const location = useLocation();
-  let { pack_id } = location.state as LocationType;
+  let { pack_id, cardsCount } = location.state as LocationType;
 
   React.useEffect(() => {
-    dispatch(getCardsListTC(page, rowsPerPage, pack_id));
-  }, [dispatch, page, rowsPerPage, pack_id]);
+    dispatch(getCardsListTC(pack_id, cardsCount));
+  }, [dispatch, pack_id, cardsCount]);
 
   const handleRequestSort = (
     event: React.MouseEvent<unknown>,
@@ -219,12 +224,12 @@ export const CardsTable = () => {
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
     setRowsPerPage(parseInt(event.target.value, 10));
-    setPage(1);
+    setPage(0);
   };
 
-  const labelDisplayedRows = ({ from, to, count }: any) => {
-    console.log(from, to, count, cardsTotalCountSelector);
-    return `${page} of ${Math.ceil(count / rowsPerPage)}`;
+  const labelDisplayedRows = ({ from, to, count }: { from: number, to: number, count: number }) => {
+    console.log('=======', from, to, count, cardsTotalCountSelector);
+    return `${page+1} of ${Math.ceil(count / rowsPerPage)}`;
   };
 
   // ==== SEARCHING =====
@@ -242,6 +247,7 @@ export const CardsTable = () => {
   };
 
   return (
+      <> {status === "loading" && <LinearProgress />}
     <Box className={style.container}>
       <EnhancedTableToolbar />
       <div style={{ marginBottom: "20px" }}>
@@ -273,7 +279,7 @@ export const CardsTable = () => {
             />
             <TableBody>
               {stableSort(filteredData, getComparator(order, orderBy))
-                // .slice(1, page * rowsPerPage + rowsPerPage)
+                .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                 .map((row, index) => {
                   const labelId = `enhanced-table-checkbox-${index}`;
 
@@ -364,5 +370,6 @@ export const CardsTable = () => {
         />
       </Paper>
     </Box>
+      </>
   );
 };

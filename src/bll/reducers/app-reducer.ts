@@ -4,9 +4,6 @@ import {AppRootStateType, AppThunk} from '../store';
 import {loginAC, LoginType} from './auth-reducer';
 import {setProfileInfoAC} from './profile-reducer';
 
-//loadind => preloader visible
-// 'idle' | 'succeeded' | 'failed' => preloader unvisible
-
 const initialState = {
     status: 'idle' as RequestStatusType,
     error: null as null | string,

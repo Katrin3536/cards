@@ -1,5 +1,5 @@
-import React, { useEffect } from "react";
-import { useAppDispatch, useAppSelector } from "../../bll/store";
+import React from "react";
+import { useAppSelector } from "../../bll/store";
 import { Navigate } from "react-router-dom";
 import { PATH } from "../../components/common/routes/RoutesConstants";
 import Grid from "@mui/material/Grid";
@@ -9,30 +9,18 @@ import { appStatusSelect } from "../../bll/reducers/app-reducer";
 import { Box, Button } from "@mui/material";
 import { PacksTable } from "./PacksTable";
 import style from "./PacksTableContainer.module.css";
-import { userIDSelect } from "../../bll/reducers/profile-reducer";
-import {
-  getUserPacksListTC,
-  getPacksListTC,
-} from "../../bll/reducers/packs-reducer";
+import { ListType } from "../../utils/enum";
 
 export const PacksTableContainer: React.FC = () => {
-  const dispatch = useAppDispatch();
-
   const isLoggedIn = useAppSelector(isLoggedInSelector);
   const status = useAppSelector(appStatusSelect);
-  const userID = useAppSelector(userIDSelect);
+
+  const [rowsPerPage, setRowsPerPage] = React.useState(5);
+  const [listType, setListType] = React.useState(ListType.All);
 
   if (!isLoggedIn) {
     return <Navigate to={PATH.LOGIN} />;
   }
-
-  const getMyPacks = () => {
-    dispatch(getUserPacksListTC(userID));
-  };
-
-  const getAllPacks = () => {
-    dispatch(getPacksListTC(1, 5));
-  };
 
   return (
     <>
@@ -45,18 +33,26 @@ export const PacksTableContainer: React.FC = () => {
               variant="contained"
               size={"small"}
               style={{ marginRight: "10px" }}
-              onClick={getMyPacks}
+              onClick={() => setListType(ListType.My)}
             >
               my
             </Button>
-            <Button variant="contained" size={"small"} onClick={getAllPacks}>
+            <Button
+              variant="contained"
+              size={"small"}
+              onClick={() => setListType(ListType.All)}
+            >
               all
             </Button>
           </Grid>
 
           <Grid item xs={10} className={style.rightSide}>
             <h4 className={style.rightTitle}>Packs list</h4>
-            <PacksTable />
+            <PacksTable
+              rowsPerPage={rowsPerPage}
+              setRowsPerPage={setRowsPerPage}
+              listType={listType}
+            />
           </Grid>
         </Grid>
       </Box>
