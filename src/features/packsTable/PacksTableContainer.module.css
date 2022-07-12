@@ -3,24 +3,22 @@
     left: 136px;
     top: 84px;
     margin: 40px auto;
-    padding: 16px;
+    padding: 15px;
     background: #FEFEFF;
     border-radius: 8px;
     box-shadow: 1px 7px 33px 9px rgba(34, 60, 80, 0.2);
-    /* background-color: rgba(0, 0, 0, 0.226); */
+    
 }
 
 .leftSide {
+    padding-right: 8px;
     background-color: rgba(0, 0, 0, 0.226);
-    /* text-align: center; */
 }
-
-
 
 .leftTitle {
     font-size: 16px;
     line-height:33px;
-    ;
+   
    color: #2D2E46;
 }
 
@@ -30,3 +28,9 @@
     line-height: 33px;
     color: #2D2E46;
 }
+
+.slider {
+    margin-top: 30px;
+    max-width: 200px;
+}
+

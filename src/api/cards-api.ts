@@ -1,13 +1,8 @@
-import axios, { AxiosResponse } from "axios";
-
-export const instance = axios.create({
-  // baseURL: process.env.REACT_APP_BACK_URL || 'http://localhost:7542/2.0/',
-  baseURL: "https://neko-back.herokuapp.com/2.0/",
-  withCredentials: true,
-});
+import { AxiosResponse } from "axios";
+import { instance } from "./api-instance";
 
 export const getCardsAPI = {
-  getCardsList(cardsPackID: string, cardsCount:number) {
+  getCardsList(cardsPackID: string, cardsCount: number) {
     return instance.get<any, AxiosResponse<CardsResponseType>, any>(
       `cards/card?cardsPack_id=${cardsPackID}&pageCount=${cardsCount}`
     );

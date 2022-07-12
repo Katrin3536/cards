@@ -1,397 +1,316 @@
-import React, {ChangeEvent, useEffect, useState} from 'react';
-import TableBody from '@mui/material/TableBody';
-import IconButton from '@mui/material/IconButton'
-import InputAdornment from '@mui/material/InputAdornment'
-import Paper from '@mui/material/Paper'
-import Table from '@mui/material/Table'
-import TableContainer from '@mui/material/TableContainer'
-import TableHead from '@mui/material/TableHead'
-import TableRow from '@mui/material/TableRow'
-import TextField from '@mui/material/TextField'
-import TableCell from '@mui/material/TableCell';
-import TableSortLabel from '@mui/material/TableSortLabel';
-import Box from '@mui/material/Box';
-import {useAppDispatch, useAppSelector} from '../../bll/store';
-import {Delete} from '@mui/icons-material';
-import CreateIcon from '@mui/icons-material/Create';
-import ApiIcon from '@mui/icons-material/Api';
-import {visuallyHidden} from '@mui/utils';
-import TablePagination from '@mui/material/TablePagination';
+import React, { ChangeEvent, useEffect, useState } from "react";
+import TableBody from "@mui/material/TableBody";
+import IconButton from "@mui/material/IconButton";
+import InputAdornment from "@mui/material/InputAdornment";
+import Paper from "@mui/material/Paper";
+import Table from "@mui/material/Table";
+import TableContainer from "@mui/material/TableContainer";
+import TableHead from "@mui/material/TableHead";
+import TableRow from "@mui/material/TableRow";
+import TextField from "@mui/material/TextField";
+import TableCell from "@mui/material/TableCell";
+import TableSortLabel from "@mui/material/TableSortLabel";
+import Box from "@mui/material/Box";
+import { useAppDispatch, useAppSelector } from "../../bll/store";
+import { Delete } from "@mui/icons-material";
+import CreateIcon from "@mui/icons-material/Create";
+import ApiIcon from "@mui/icons-material/Api";
 import {
-    addPackTC,
-    deletePackTC,
-    getPacksListTC, getUserPacksListTC,
-    packsSelect,
-    totalPacksCountSelect,
-    updatePackNameTC,
-} from '../../bll/reducers/packs-reducer';
-import {PATH} from '../../components/common/routes/RoutesConstants';
-import {useNavigate} from 'react-router-dom';
-import SearchIcon from '@mui/icons-material/Search';
-import {userIDSelect} from '../../bll/reducers/profile-reducer';
-import {ListType} from '../../utils/enum';
-import Button from '@mui/material/Button';
+  addPackTC,
+  deletePackTC,
+  getSearchPacksListTC,
+  getSortPacksListTC,
+  packsSelect,
+  pageCountSelect,
+  pageSelect,
+  setPageAC,
+  setPageCountAC,
+  totalPacksCountSelect,
+  updatePackNameTC,
+} from "../../bll/reducers/packs-reducer";
+import { PATH } from "../../components/common/routes/RoutesConstants";
+import { useNavigate } from "react-router-dom";
+import SearchIcon from "@mui/icons-material/Search";
+import { userIDSelect } from "../../bll/reducers/profile-reducer";
+import Button from "@mui/material/Button";
+import style from "./PacksTable.module.css";
+import { appStatusSelect } from "../../bll/reducers/app-reducer";
+import { useDebounce } from "../../utils/useDebounce";
+import { PaginationSelect } from "./pagination/PaginationSelect";
 
 interface Data {
-    id: string;
-    name: string;
-    cards: number;
-    create: string;
-    update: string;
-    createdBy: string;
-    actions: string;
-    label: string;
-}
-
-function descendingComparator<T>(a: T, b: T, orderBy: keyof T) {
-    if (b[orderBy] < a[orderBy]) {
-        return -1;
-    }
-    if (b[orderBy] > a[orderBy]) {
-        return 1;
-    }
-    return 0;
-}
-
-type Order = 'asc' | 'desc';
-
-function getComparator<Key extends keyof any>(
-    order: Order,
-    orderBy: Key
-): (
-    a: { [key in Key]: number | string },
-    b: { [key in Key]: number | string }
-) => number {
-    return order === 'desc'
-        ? (a, b) => descendingComparator(a, b, orderBy)
-        : (a, b) => -descendingComparator(a, b, orderBy);
-}
-
-function stableSort<T>(
-    array: readonly T[],
-    comparator: (a: any, b: any) => number
-) {
-    const stabilizedThis = array.map((el, index) => [el, index] as [T, number]);
-    stabilizedThis.sort((a, b) => {
-        const order = comparator(a[0], b[0]);
-        if (order !== 0) {
-            return order;
-        }
-        return a[1] - b[1];
-    });
-    return stabilizedThis.map((el) => el[0]);
+  id: string;
+  name: string;
+  cards: number;
+  create: string;
+  update: string;
+  createdBy: string;
+  actions: string;
+  label: string;
 }
 
 interface HeadCell {
-    id: keyof Data;
-    label: string;
-    textAlign: 'left' | 'center' | 'right' | 'justify' | 'inherit' | undefined;
-    sortable?: boolean;
-    disablePadding: boolean;
+  id: keyof Data;
+  label: string;
+  textAlign: "left" | "center" | "right" | "justify" | "inherit" | undefined;
+  sortable?: boolean;
+  disablePadding: boolean;
 }
 
 const headCells: readonly HeadCell[] = [
-    {
-        id: 'name',
-        textAlign: 'left',
-        disablePadding: true,
-        label: 'Name',
-    },
-    {
-        id: 'cards',
-        textAlign: 'left',
-        disablePadding: false,
-        label: 'Cards',
-    },
-    {
-        id: 'update',
-        textAlign: 'left',
-        disablePadding: false,
-        label: 'Last updated',
-    },
-    {
-        id: 'createdBy',
-        textAlign: 'left',
-        disablePadding: false,
-        label: 'Created by',
-    },
-    {
-        id: 'actions',
-        textAlign: 'left',
-        disablePadding: false,
-        label: 'Actions',
-    },
+  {
+    id: "name",
+    textAlign: "left",
+    disablePadding: true,
+    label: "Name",
+  },
+  {
+    id: "cards",
+    textAlign: "left",
+    disablePadding: false,
+    label: "Cards",
+  },
+  {
+    id: "update",
+    textAlign: "left",
+    disablePadding: false,
+    label: "Last updated",
+  },
+  {
+    id: "createdBy",
+    textAlign: "left",
+    disablePadding: false,
+    label: "Created by",
+  },
+  {
+    id: "actions",
+    textAlign: "left",
+    disablePadding: false,
+    label: "Actions",
+  },
 ];
 
-interface EnhancedTableProps {
-    onRequestSort: (
-        event: React.MouseEvent<unknown>,
-        property: keyof Data
-    ) => void;
-    order: Order;
-    orderBy: string;
-}
+const EnhancedTableHead: React.FC = () => {
+  const [updated, setUpdated] = useState<"0updated" | "1updated">("0updated");
+  const dispatch = useAppDispatch();
 
-function EnhancedTableHead(props: EnhancedTableProps) {
-    const {order, orderBy, onRequestSort} = props;
-    const createSortHandler =
-        (property: keyof Data) => (event: React.MouseEvent<unknown>) => {
-            onRequestSort(event, property);
-        };
+  const sortByUpdateHandler = () => {
+    setUpdated(updated === "0updated" ? "1updated" : "0updated");
+    dispatch(getSortPacksListTC(updated));
+  };
 
-    return (
-        <TableHead>
-            <TableRow>
-                {headCells.map((headCell) => (
-                    <TableCell
-                        key={headCell.id}
-                        align={headCell.textAlign}
+  return (
+    <TableHead>
+      <TableRow>
+        {headCells.map((headCell) => (
+          <TableCell
+            key={headCell.id}
+            align={headCell.textAlign}
+            padding="normal"
+          >
+            <TableSortLabel
+              active={headCell.label === "Last updated"}
+              direction={updated === "1updated" ? "asc" : "desc"}
+              onClick={sortByUpdateHandler}
+            >
+              {headCell.label}
+            </TableSortLabel>
+          </TableCell>
+        ))}
+      </TableRow>
+    </TableHead>
+  );
+};
+
+export const PacksTable: React.FC = () => {
+  const [value, setValue] = useState("");
+
+  const dispatch = useAppDispatch();
+  const navigate = useNavigate();
+
+  const totalPacksCount = useAppSelector(totalPacksCountSelect);
+  const packsSelector = useAppSelector(packsSelect);
+  const userID = useAppSelector(userIDSelect);
+  const status = useAppSelector(appStatusSelect);
+  const page = useAppSelector(pageSelect);
+  const rowsPerPage = useAppSelector(pageCountSelect);
+
+  // ==== SEARCHING =====
+
+  const debouncedValue = useDebounce<string>(value, 1500);
+
+  const onChangeHandler = (
+    event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
+    setValue(event.target.value);
+  };
+
+  useEffect(() => {
+    if (debouncedValue.length) {
+      dispatch(getSearchPacksListTC(debouncedValue));
+      dispatch(setPageAC(1));
+    }
+  }, [dispatch, debouncedValue, page, rowsPerPage]);
+
+  //=================================
+
+  const handleChangePage = (newPage: number) => {
+    dispatch(setPageAC(newPage));
+  };
+
+  const handleChangeRowsPerPage = (pageCount: number) => {
+    dispatch(setPageCountAC(pageCount));
+  };
+
+  // ==== ACTIONS ====
+
+  // ==== ADD NEW PACK ====
+
+  const addNewPackCallback = () => {
+    dispatch(addPackTC(page, rowsPerPage, "Training card_new"));
+  };
+
+  // ==== DELETE PACK ====
+
+  const deletePackHandler = (packID: string) => {
+    dispatch(deletePackTC(page, rowsPerPage, packID));
+  };
+
+  // ==== UPDATE PACK NAME ====
+
+  const updatePackHandler = (packID: string) => {
+    dispatch(
+      updatePackNameTC(page, rowsPerPage, packID, "Updated name by Max")
+    );
+  };
+
+  return (
+    <Box sx={{ width: "100%" }}>
+      <Paper>
+        <div className={style.search_group}>
+          <TextField
+            fullWidth
+            size={"small"}
+            placeholder="Search"
+            disabled={status === "loading"}
+            value={value}
+            onChange={onChangeHandler}
+            InputProps={{
+              type: "search",
+              startAdornment: (
+                <InputAdornment position="start">
+                  <SearchIcon />
+                </InputAdornment>
+              ),
+            }}
+          />
+          <Button
+            variant="contained"
+            disabled={status === "loading"}
+            className={style.search_btn}
+            style={{ width: "30%", marginLeft: "30px" }}
+            onClick={addNewPackCallback}
+          >
+            add new pack
+          </Button>
+        </div>
+        <TableContainer>
+          <Table
+            sx={{ minWidth: 750 }}
+            aria-labelledby="tableTitle"
+            size={"medium"}
+          >
+            <EnhancedTableHead />
+            <TableBody>
+              {packsSelector.length ? (
+                packsSelector.map((card, index) => {
+                  const labelId = `enhanced-table-checkbox-${index}`;
+
+                  return (
+                    <TableRow hover key={index}>
+                      <TableCell
+                        component="th"
+                        id={labelId}
+                        scope="row"
+                        padding="none"
+                        align={
+                          headCells.find((cell) => cell.id === "name")
+                            ?.textAlign
+                        }
+                        onClick={() =>
+                          navigate(PATH.CARDS_LIST, {
+                            state: {
+                              pack_id: card._id,
+                              cardsCount: card.cardsCount,
+                            },
+                          })
+                        }
+                        style={{ paddingLeft: "30px" }}
+                      >
+                        {card.name.slice(0, 70)}
+                      </TableCell>
+                      <TableCell
                         padding="normal"
-                        sortDirection={orderBy === headCell.id ? order : false}
-                    >
-                        {headCell.sortable ? (
-                            <TableSortLabel
-                                active={orderBy === headCell.id}
-                                direction={orderBy === headCell.id ? order : 'asc'}
-                                onClick={createSortHandler(headCell.id)}
-                            >
-                                {headCell.label}
-                                {orderBy === headCell.id ? (
-                                    <Box component="span" sx={visuallyHidden}>
-                                        {order === 'desc'
-                                            ? 'sorted descending'
-                                            : 'sorted ascending'}
-                                    </Box>
-                                ) : null}
-                            </TableSortLabel>
-                        ) : (
-                            headCell.label
-                        )}
-                    </TableCell>
-                ))}
-            </TableRow>
-        </TableHead>
-    );
-}
-
-type PacksTableType = {
-    rowsPerPage: number,
-    setRowsPerPage: (value: number) => void,
-    listType: ListType
-}
-
-export const PacksTable = ({rowsPerPage, setRowsPerPage, listType}: PacksTableType) => {
-    const [order, setOrder] = React.useState<Order>('asc');
-    const [orderBy, setOrderBy] = React.useState<keyof Data>('update');
-    const [page, setPage] = React.useState(0);
-
-    const dispatch = useAppDispatch();
-
-    const navigate = useNavigate();
-
-    const totalPacksCount = useAppSelector(totalPacksCountSelect);
-    const packsSelector = useAppSelector(packsSelect);
-    const userID = useAppSelector(userIDSelect);
-
-    const getMyPacks = () => {
-        dispatch(getUserPacksListTC(userID));
-    };
-
-    const getAllPacks = () => {
-        dispatch(getPacksListTC(1, rowsPerPage)); //Не передавал соответсвующие переменные так как при нажатии отобразить нужно только первую страницу
-    };
-
-    useEffect(() => {
-        if (listType === ListType.My) {
-            getMyPacks();
-        } else {
-            getAllPacks();
-        }
-    }, [dispatch, page, rowsPerPage, listType]);
-
-    const handleRequestSort = (
-        event: React.MouseEvent<unknown>,
-        property: keyof Data
-    ) => {
-        const isAsc = orderBy === property && order === 'asc';
-        setOrder(isAsc ? 'desc' : 'asc');
-        setOrderBy(property);
-    };
-
-    const handleChangePage = (
-        event: React.MouseEvent<HTMLButtonElement> | null,
-        newPage: number
-    ) => {
-        setPage(newPage);
-    };
-
-    const handleChangeRowsPerPage = (
-        event: React.ChangeEvent<HTMLInputElement>
-    ) => {
-        setRowsPerPage(parseInt(event.target.value, 10));
-        setPage(0);
-    };
-
-    const labelDisplayedRows = ({from, to, count}: { from: number, to: number, count: number }) => {
-        return `${page + 1} of ${Math.ceil(count / rowsPerPage)}`;
-    };
-
-    // ==== SEARCHING =====
-
-    const [value, setValue] = useState('');
-
-    const filteredData = packsSelector.filter((pack) =>
-        pack.name.toLowerCase().includes(value.toLowerCase())
-    );
-
-    const onChangeHandler = (
-        event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-    ) => {
-        setValue(event.target.value);
-    };
-
-    // ==== ACTIONS ====
-
-    // ==== ADD NEW PACK ====
-
-    const addNewPackCallback = () => {
-        dispatch(addPackTC('Training card_2'));
-        dispatch(getPacksListTC(page, rowsPerPage));
-    };
-
-    // ==== DELETE PACK ====
-
-    const deletePackHandler = (packID: string) => {
-        dispatch(deletePackTC(packID));
-        dispatch(getPacksListTC(page, rowsPerPage));
-    };
-
-    // ==== UPDATE PACK NAME ====
-
-    const updatePackHandler = (packID: string) => {
-        dispatch(updatePackNameTC(packID, 'Updated name'));
-        dispatch(getPacksListTC(page, rowsPerPage));
-    };
-
-    return (
-        <Box sx={{width: '100%'}}>
-            <Paper>
-                <div style={{marginBottom: '20px'}}>
-                    <TextField
-                        size={'small'}
-                        InputProps={{
-                            type: 'search',
-                            startAdornment: (
-                                <InputAdornment position="start">
-                                    <SearchIcon/>
-                                </InputAdornment>
-                            ),
-                        }}
-                        onChange={onChangeHandler}
-                    />
-                    <Button
-                        variant="contained"
-                        style={{marginLeft: '30px'}}
-                        onClick={addNewPackCallback}
-                    >
-                        add new pack
-                    </Button>
-                </div>
-                <TableContainer>
-                    <Table
-                        sx={{minWidth: 750}}
-                        aria-labelledby="tableTitle"
-                        size={'medium'}
-                    >
-                        <EnhancedTableHead
-                            order={order}
-                            orderBy={orderBy}
-                            onRequestSort={handleRequestSort}
-                        />
-                        <TableBody>
-                            {stableSort(filteredData, getComparator(order, orderBy))
-                                // .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                                .map((card, index) => {
-                                    const labelId = `enhanced-table-checkbox-${index}`;
-
-                                    return (
-                                        <TableRow hover key={index}>
-                                            <TableCell
-                                                component="th"
-                                                id={labelId}
-                                                scope="row"
-                                                padding="none"
-                                                align={
-                                                    headCells.find((cell) => cell.id === 'name')
-                                                        ?.textAlign
-                                                }
-                                                onClick={() =>
-                                                    navigate(PATH.CARDS_LIST, {
-                                                        state: {pack_id: card._id, cardsCount: card.cardsCount},
-                                                    })
-                                                }
-                                                style={{paddingLeft: '30px'}}
-                                            >
-                                                {card.name.slice(0, 70)}
-                                            </TableCell>
-                                            <TableCell
-                                                padding="normal"
-                                                align={
-                                                    headCells.find((cell) => cell.id === 'cards')
-                                                        ?.textAlign
-                                                }
-                                            >
-                                                {card.cardsCount}
-                                            </TableCell>
-                                            <TableCell
-                                                padding="normal"
-                                                align={
-                                                    headCells.find((cell) => cell.id === 'update')
-                                                        ?.textAlign
-                                                }
-                                            >
-                                                {card.updated.slice(0, 10)}
-                                            </TableCell>
-                                            <TableCell
-                                                padding="normal"
-                                                align={
-                                                    headCells.find((cell) => cell.id === 'create')
-                                                        ?.textAlign
-                                                }
-                                            >
-                                                {card.created.slice(0, 10)}
-                                            </TableCell>
-                                            <TableCell align="right">
-                                                <IconButton>
-                                                    <ApiIcon/>
-                                                </IconButton>
-                                                <IconButton onClick={() => deletePackHandler(card._id)}>
-                                                    <Delete/>
-                                                </IconButton>
-                                                <IconButton onClick={() => updatePackHandler(card._id)}>
-                                                    <CreateIcon/>
-                                                </IconButton>
-                                            </TableCell>
-                                        </TableRow>
-                                    );
-                                })}
-                        </TableBody>
-                    </Table>
-                </TableContainer>
-                <TablePagination
-                    labelRowsPerPage={'Packs per page:'}
-                    showFirstButton={true}
-                    showLastButton={true}
-                    rowsPerPageOptions={[5, 10, 25]}
-                    component="div"
-                    rowsPerPage={rowsPerPage}
-                    count={totalPacksCount}
-                    page={page}
-                    onPageChange={handleChangePage}
-                    onRowsPerPageChange={handleChangeRowsPerPage}
-                    labelDisplayedRows={labelDisplayedRows}
-                />
-            </Paper>
-        </Box>
-    );
+                        align={
+                          headCells.find((cell) => cell.id === "cards")
+                            ?.textAlign
+                        }
+                      >
+                        {card.cardsCount}
+                      </TableCell>
+                      <TableCell
+                        padding="normal"
+                        align={
+                          headCells.find((cell) => cell.id === "update")
+                            ?.textAlign
+                        }
+                      >
+                        {card.updated.slice(0, 10)}
+                      </TableCell>
+                      <TableCell
+                        padding="normal"
+                        align={
+                          headCells.find((cell) => cell.id === "create")
+                            ?.textAlign
+                        }
+                      >
+                        {card.name}
+                      </TableCell>
+                      <TableCell align="right">
+                        <IconButton disabled={status === "loading"}>
+                          <ApiIcon />
+                        </IconButton>
+                        <IconButton
+                          disabled={status === "loading"}
+                          onClick={() => deletePackHandler(card._id)}
+                        >
+                          <Delete />
+                        </IconButton>
+                        <IconButton
+                          disabled={status === "loading"}
+                          onClick={() => updatePackHandler(card._id)}
+                        >
+                          <CreateIcon />
+                        </IconButton>
+                      </TableCell>
+                    </TableRow>
+                  );
+                })
+              ) : (
+                <div>Packs not found...</div> //Стилизовать!!!
+              )}
+            </TableBody>
+          </Table>
+        </TableContainer>
+        <PaginationSelect
+          disable={status === "loading"}
+          cardsTotalCount={totalPacksCount}
+          pageCount={rowsPerPage}
+          page={page}
+          onChangePage={handleChangePage}
+          onChangeValue={handleChangeRowsPerPage}
+        />
+      </Paper>
+    </Box>
+  );
 };
