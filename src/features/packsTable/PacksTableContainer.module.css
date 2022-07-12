@@ -1,9 +1,11 @@
 .container {
+    display: flex;
+    justify-content: space-around;
     width: 80%;
-    left: 136px;
-    top: 84px;
+    /* left: 136px;
+    top: 84px; */
     margin: 40px auto;
-    padding: 15px;
+    padding: 20px 0;
     background: #FEFEFF;
     border-radius: 8px;
     box-shadow: 1px 7px 33px 9px rgba(34, 60, 80, 0.2);
@@ -11,15 +13,14 @@
 }
 
 .leftSide {
-    padding-right: 8px;
+    padding: 0 25px;
     background-color: rgba(0, 0, 0, 0.226);
 }
 
 .leftTitle {
     font-size: 16px;
-    line-height:33px;
-   
-   color: #2D2E46;
+    line-height:33px;   
+    color: #2D2E46;
 }
 
 .rightTitle {

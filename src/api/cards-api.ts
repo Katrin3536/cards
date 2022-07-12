@@ -2,9 +2,9 @@ import { AxiosResponse } from "axios";
 import { instance } from "./api-instance";
 
 export const getCardsAPI = {
-  getCardsList(cardsPackID: string, cardsCount: number) {
+  getCardsList(cardsPackID: string) {
     return instance.get<any, AxiosResponse<CardsResponseType>, any>(
-      `cards/card?cardsPack_id=${cardsPackID}&pageCount=${cardsCount}`
+      `cards/card?cardsPack_id=${cardsPackID}`
     );
   },
 

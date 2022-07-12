@@ -15,16 +15,19 @@ import { visuallyHidden } from "@mui/utils";
 import ArrowBackOutlinedIcon from "@mui/icons-material/ArrowBackOutlined";
 import Button from "@mui/material/Button";
 import GradeIcon from "@mui/icons-material/Grade";
+import EditIcon from "@mui/icons-material/Edit";
 import style from "./CardsTable.module.css";
 import { Link, useNavigate } from "react-router-dom";
 import { PATH } from "../../components/common/routes/RoutesConstants";
 import { useLocation } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../../bll/store";
 import { getCardsListTC } from "../../bll/reducers/cards-reducer";
-import { InputAdornment, TextField } from "@mui/material";
+import { IconButton, InputAdornment, TextField } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
-import LinearProgress from '@mui/material/LinearProgress';
-import {appStatusSelect} from '../../bll/reducers/app-reducer';
+import LinearProgress from "@mui/material/LinearProgress";
+import { appStatusSelect } from "../../bll/reducers/app-reducer";
+import { packIdSelect } from "../../bll/reducers/packs-reducer";
+import { useDebounce } from "../../utils/useDebounce";
 
 interface Data {
   question: string;
@@ -106,6 +109,12 @@ const headCells: readonly HeadCell[] = [
     disablePadding: false,
     label: "Grade",
   },
+  {
+    id: "edit",
+    textAlign: "center",
+    disablePadding: false,
+    label: "Edit",
+  },
 ];
 
 interface EnhancedTableProps {
@@ -180,6 +189,7 @@ const EnhancedTableToolbar = () => {
 };
 
 export const CardsTable = () => {
+  const [value, setValue] = React.useState("");
   const [order, setOrder] = React.useState<Order>("asc");
   const [orderBy, setOrderBy] = React.useState<keyof Data>("lastUpdated");
   const [page, setPage] = React.useState(0);
@@ -192,20 +202,24 @@ export const CardsTable = () => {
   const cardsTotalCountSelector = useAppSelector(
     (state) => state.cards.cardsTotalCount
   );
-  console.log(cardsTotalCountSelector);
-  const status = useAppSelector(appStatusSelect)
+  const packID = useAppSelector(packIdSelect);
+  const status = useAppSelector(appStatusSelect);
 
-  interface LocationType {
-    pack_id: string;
-    cardsCount: number
-  }
+  // ==== SEARCHING =====
 
-  const location = useLocation();
-  let { pack_id, cardsCount } = location.state as LocationType;
+  const debouncedValue = useDebounce<string>(value, 1500);
+
+  const onChangeHandler = (
+    event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
+    setValue(event.target.value);
+  };
+
+  // ОРГАНИЗОВАТЬ ПОИСК!!!
 
   React.useEffect(() => {
-    dispatch(getCardsListTC(pack_id, cardsCount));
-  }, [dispatch, pack_id, cardsCount]);
+    dispatch(getCardsListTC(packID));
+  }, [dispatch, packID]);
 
   const handleRequestSort = (
     event: React.MouseEvent<unknown>,
@@ -227,149 +241,158 @@ export const CardsTable = () => {
     setPage(0);
   };
 
-  const labelDisplayedRows = ({ from, to, count }: { from: number, to: number, count: number }) => {
-    console.log('=======', from, to, count, cardsTotalCountSelector);
-    return `${page+1} of ${Math.ceil(count / rowsPerPage)}`;
-  };
-
-  // ==== SEARCHING =====
-
-  const [value, setValue] = React.useState("");
-
-  const filteredData = cardsSelector.filter((card) =>
-    card.question.toLowerCase().includes(value.toLowerCase())
-  );
-
-  const onChangeHandler = (
-    event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-  ) => {
-    setValue(event.target.value);
+  const labelDisplayedRows = ({
+    from,
+    to,
+    count,
+  }: {
+    from: number;
+    to: number;
+    count: number;
+  }) => {
+    console.log("=======", from, to, count, cardsTotalCountSelector);
+    return `${page + 1} of ${Math.ceil(count / rowsPerPage)}`;
   };
 
   return (
-      <> {status === "loading" && <LinearProgress />}
-    <Box className={style.container}>
-      <EnhancedTableToolbar />
-      <div style={{ marginBottom: "20px" }}>
-        <TextField
-          fullWidth={true}
-          size={"small"}
-          InputProps={{
-            type: "search",
-            startAdornment: (
-              <InputAdornment position="start">
-                <SearchIcon />
-              </InputAdornment>
-            ),
-          }}
-          onChange={onChangeHandler}
-        />
-      </div>
-      <Paper sx={{ width: "100%", mb: 5 }}>
-        <TableContainer className={style[`table-container`]}>
-          <Table
-            sx={{ minWidth: 750 }}
-            aria-labelledby="tableTitle"
-            size={"medium"}
-          >
-            <EnhancedTableHead
-              order={order}
-              orderBy={orderBy}
-              onRequestSort={handleRequestSort}
-            />
-            <TableBody>
-              {stableSort(filteredData, getComparator(order, orderBy))
-                .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                .map((row, index) => {
-                  const labelId = `enhanced-table-checkbox-${index}`;
+    <>
+      {status === "loading" && <LinearProgress />}
+      <Box className={style.container}>
+        <EnhancedTableToolbar />
+        <div style={{ marginBottom: "20px" }}>
+          <TextField
+            fullWidth={true}
+            size={"small"}
+            InputProps={{
+              type: "search",
+              startAdornment: (
+                <InputAdornment position="start">
+                  <SearchIcon />
+                </InputAdornment>
+              ),
+            }}
+            onChange={onChangeHandler}
+          />
+        </div>
+        <Paper sx={{ width: "100%", mb: 5 }}>
+          <TableContainer className={style[`table-container`]}>
+            <Table
+              sx={{ minWidth: 750 }}
+              aria-labelledby="tableTitle"
+              size={"medium"}
+            >
+              <EnhancedTableHead
+                order={order}
+                orderBy={orderBy}
+                onRequestSort={handleRequestSort}
+              />
+              <TableBody>
+                {
+                  // stableSort(filteredData, getComparator(order, orderBy))
+                  //   .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                  cardsSelector.length ? (
+                    cardsSelector.map((row, index) => {
+                      const labelId = `enhanced-table-checkbox-${index}`;
 
-                  return (
-                    <TableRow
-                      hover
-                      key={index}
-                      onClick={() =>
-                        navigate(
-                          PATH.CARD_INFO,
+                      return (
+                        <TableRow hover key={index}>
+                          <TableCell
+                            component="th"
+                            id={labelId}
+                            scope="row"
+                            padding="normal"
+                            align={
+                              headCells.find((cell) => cell.id === "question")
+                                ?.textAlign
+                            }
+                          >
+                            {row.question}
+                          </TableCell>
+                          <TableCell
+                            padding="normal"
+                            align={
+                              headCells.find((cell) => cell.id === "answer")
+                                ?.textAlign
+                            }
+                          >
+                            {row.answer}
+                          </TableCell>
+                          <TableCell
+                            padding="normal"
+                            align={
+                              headCells.find(
+                                (cell) => cell.id === "lastUpdated"
+                              )?.textAlign
+                            }
+                          >
+                            {row.updated.slice(0, 10)}
+                          </TableCell>
+                          <TableCell
+                            padding="normal"
+                            align={
+                              headCells.find((cell) => cell.id === "grade")
+                                ?.textAlign
+                            }
+                          >
+                            <GradeIcon
+                              style={{ color: "rgba(33, 38, 143, 1)" }}
+                              fontSize="small"
+                            />
+                            <GradeIcon fontSize="small" />
+                            <GradeIcon fontSize="small" />
+                            <GradeIcon fontSize="small" />
+                            <GradeIcon fontSize="small" />
+                          </TableCell>
+                          <TableCell
+                            padding="normal"
+                            align={
+                              headCells.find((cell) => cell.id === "grade")
+                                ?.textAlign
+                            }
+                          >
+                            <IconButton
+                              disabled={status === "loading"}
+                              onClick={() =>
+                                navigate(
+                                  PATH.CARD_INFO,
 
-                          {
-                            // replace: true,
-                            state: {
-                              question: row.question,
-                              answer: row.answer,
-                              pack_id: pack_id,
-                            },
-                          }
-                        )
-                      }
-                    >
-                      <TableCell
-                        component="th"
-                        id={labelId}
-                        scope="row"
-                        padding="normal"
-                        align={
-                          headCells.find((cell) => cell.id === "question")
-                            ?.textAlign
-                        }
-                      >
-                        {row.question}
-                      </TableCell>
-                      <TableCell
-                        padding="normal"
-                        align={
-                          headCells.find((cell) => cell.id === "answer")
-                            ?.textAlign
-                        }
-                      >
-                        {row.answer}
-                      </TableCell>
-                      <TableCell
-                        padding="normal"
-                        align={
-                          headCells.find((cell) => cell.id === "lastUpdated")
-                            ?.textAlign
-                        }
-                      >
-                        {row.updated.slice(0, 10)}
-                      </TableCell>
-                      <TableCell
-                        padding="normal"
-                        align={
-                          headCells.find((cell) => cell.id === "grade")
-                            ?.textAlign
-                        }
-                      >
-                        <GradeIcon
-                          style={{ color: "rgba(33, 38, 143, 1)" }}
-                          fontSize="small"
-                        />
-                        <GradeIcon fontSize="small" />
-                        <GradeIcon fontSize="small" />
-                        <GradeIcon fontSize="small" />
-                        <GradeIcon fontSize="small" />
-                      </TableCell>
-                      {/*<TableCell align="right"><button>Learn</button></TableCell>*/}
-                    </TableRow>
-                  );
-                })}
-            </TableBody>
-          </Table>
-        </TableContainer>
-        <TablePagination
-          labelRowsPerPage={"Cards per page:"}
-          showFirstButton={true}
-          showLastButton={true}
-          rowsPerPageOptions={[5, 10, 25]}
-          component="div"
-          count={cardsTotalCountSelector}
-          rowsPerPage={rowsPerPage}
-          page={page}
-          onPageChange={handleChangePage}
-          onRowsPerPageChange={handleChangeRowsPerPage}
-          labelDisplayedRows={labelDisplayedRows}
-        />
-      </Paper>
-    </Box>
-      </>
+                                  {
+                                    state: {
+                                      question: row.question,
+                                      answer: row.answer,
+                                    },
+                                  }
+                                )
+                              }
+                            >
+                              <EditIcon />
+                            </IconButton>
+                          </TableCell>
+                        </TableRow>
+                      );
+                    })
+                  ) : (
+                    <div>Cards not found...</div>
+                  )
+                }
+              </TableBody>
+            </Table>
+          </TableContainer>
+          <TablePagination
+            labelRowsPerPage={"Cards per page:"}
+            showFirstButton={true}
+            showLastButton={true}
+            rowsPerPageOptions={[5, 10, 25]}
+            component="div"
+            count={cardsTotalCountSelector}
+            rowsPerPage={rowsPerPage}
+            page={page}
+            onPageChange={handleChangePage}
+            onRowsPerPageChange={handleChangeRowsPerPage}
+            labelDisplayedRows={labelDisplayedRows}
+          />
+        </Paper>
+      </Box>
+    </>
   );
 };

@@ -1,8 +1,51 @@
-.profile {
-    width: 80%;
-    margin: 0 auto;
-    margin-top: 40px;
-    font-size: 18px;
+.container {   
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    width: 50%;
+    margin: 40px auto;
+    padding: 10px;
+    border-radius: 8px;
+    box-shadow: 1px 7px 33px 9px rgba(34, 60, 80, 0.2);
 }
 
+.userAvatar {
+    display: flex;
+    justify-content: center;
+    min-width: 200px;
+    height: 200px;
+    border-radius: 50%;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: cover;
+}
 
+.userInfo {
+    margin-top: 30px;
+}
+
+.userName {
+    font-size: 22px;
+    font-weight: 700;
+}
+
+.logoutBtn {
+    cursor: pointer;
+    position: absolute;
+    content: '';
+    right: 5px;
+    top: 5px;
+}
+
+@media only screen and (max-width: 756px) {
+    .userInfo {
+        font-size: 14px;
+    }
+    .userName {
+        font-size: 16px;
+        font-weight: 500;
+    }
+}

@@ -2,9 +2,9 @@ import { AxiosResponse } from "axios";
 import { instance } from "./api-instance";
 
 export const getPacksAPI = {
-  getUserPacksList(userID: string) {
+  getUserPacksList(page: number, pageCount: number, userID: string) {
     return instance.get<any, AxiosResponse<PacksResponseType>, any>(
-      `cards/pack?user_id=${userID}`
+      `cards/pack?page=${page}&pageCount=${pageCount}&user_id=${userID}`
     );
   },
 
@@ -31,9 +31,9 @@ export const getPacksAPI = {
     );
   },
 
-  getSortPacksList(sortUpdate: string) {
+  getSortPacksList(page: number, pageCount: number, sortUpdate: string) {
     return instance.get<any, AxiosResponse<PacksResponseType>, any>(
-      `cards/pack?sortPacks=${sortUpdate}`
+      `cards/pack?page=${page}&pageCount=${pageCount}&sortPacks=${sortUpdate}`
     );
   },
 
@@ -92,6 +92,7 @@ export type UpdatePackNamePayloadType = {
 export type CardPacksType = {
   _id: string;
   user_id: string;
+  user_name: string;
   name: string;
   cardsCount: number;
   created: string;

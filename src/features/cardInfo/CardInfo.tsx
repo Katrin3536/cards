@@ -11,13 +11,10 @@ export const CardInfo: React.FC = () => {
   interface LocationType {
     question: string;
     answer: string;
-    pack_id: string;
   }
 
   const location = useLocation();
-  let { question, answer, pack_id } = location.state as LocationType;
-
-  console.log(pack_id);
+  let { question, answer } = location.state as LocationType;
 
   return (
     <div className={commonStyle.container}>
@@ -40,7 +37,7 @@ export const CardInfo: React.FC = () => {
               variant={"contained"}
               color={"primary"}
               style={{ width: "30%" }}
-              onClick={() => navigate(PATH.CARDS_LIST, { state: pack_id })}
+              onClick={() => navigate(PATH.CARDS_LIST)}
             >
               Cancel
             </Button>

@@ -42,7 +42,11 @@ export const PaginationSelect = (props: PaginationGroupType) => {
       <Stack spacing={2}>
         <Pagination
           disabled={disable}
-          count={cardsTotalCount}
+          count={
+            cardsTotalCount && pageCount
+              ? Math.round(cardsTotalCount / pageCount)
+              : cardsTotalCount
+          }
           page={page}
           shape="rounded"
           onChange={changePageHandler}

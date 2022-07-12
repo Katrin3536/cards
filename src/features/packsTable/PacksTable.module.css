@@ -1,8 +1,12 @@
-.search_group {
+.search {
     display: flex;
     justify-content: space-between;
     align-items: center;
     margin: 20px 0;
 
+}
+
+.tableContainer {
+    box-shadow: 1px 7px 33px 9px rgba(34, 60, 80, 0.2);
 }
 

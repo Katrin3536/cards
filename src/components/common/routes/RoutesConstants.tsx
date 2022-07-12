@@ -1,8 +1,7 @@
 import React from "react";
 import { PasswordRecovering } from "../../../features/passwordRecovering/PasswordRecovering";
-import Profile from "../../../features/profile/Profile";
+import { Profile } from "../../../features/profile/Profile";
 import { Registration } from "../../../features/registration/Registration";
-import { CheckEmail } from "../../../features/сheckEmail/CheckEmail";
 import { Routes, Route, Navigate } from "react-router-dom";
 import TestPage from "../../../features/testPage/TestPage";
 import Error404 from "../../error404/Error404";
@@ -11,6 +10,7 @@ import { Login } from "../../../features/login/Login";
 import { CardInfo } from "../../../features/cardInfo/CardInfo";
 import { PacksTableContainer } from "../../../features/packsTable/PacksTableContainer";
 import { CardsTable } from "../../../features/cardsTable/CardsTable";
+import { CheckEmail } from "../../../features/checkEmail/CheckEmail";
 
 export const PATH = {
   LOGIN: "/login",

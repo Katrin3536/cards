@@ -38,7 +38,7 @@ export const PacksTableContainer: React.FC = () => {
   };
 
   const getMyListHandler = () => {
-    dispatch(getUserPacksListTC(userID));
+    dispatch(getUserPacksListTC(page, rowsPerPage, userID));
   };
 
   const getAllListHandler = () => {
@@ -53,38 +53,35 @@ export const PacksTableContainer: React.FC = () => {
     <>
       {status === "loading" && <LinearProgress />}
       <Box className={style.container}>
-        <Grid container justifyContent="center" spacing={1}>
-          <Grid item xs={2} className={style.leftSide}>
-            <h4 className={style.leftTitle}>Show packs cards</h4>
-            <Button
-              variant="contained"
-              size={"small"}
-              style={{ marginRight: "10px" }}
-              onClick={getMyListHandler}
-            >
-              my
-            </Button>
-            <Button
-              variant="contained"
-              size={"small"}
-              onClick={getAllListHandler}
-            >
-              all
-            </Button>
-            <div className={style.slider}>
-              <h4 className={style.leftTitle}>Number of cards</h4>
-              <SuperDoubleRange
-                onChangeRange={changeRangeHandler}
-                className={style.range}
-                status={status}
-              />
-            </div>
-          </Grid>
-
-          <Grid item xs={10} className={style.rightSide}>
-            <h4 className={style.rightTitle}>Packs list</h4>
-            <PacksTable />
-          </Grid>
+        <Grid item xs={2} className={style.leftSide}>
+          <h4 className={style.leftTitle}>Show packs cards</h4>
+          <Button
+            variant="contained"
+            size={"small"}
+            style={{ marginRight: "10px" }}
+            onClick={getMyListHandler}
+          >
+            my
+          </Button>
+          <Button
+            variant="contained"
+            size={"small"}
+            onClick={getAllListHandler}
+          >
+            all
+          </Button>
+          <div className={style.slider}>
+            <h4 className={style.leftTitle}>Number of cards</h4>
+            <SuperDoubleRange
+              onChangeRange={changeRangeHandler}
+              className={style.range}
+              status={status}
+            />
+          </div>
+        </Grid>
+        <Grid item xs={10} className={style.rightSide}>
+          <h4 className={style.rightTitle}>Packs list</h4>
+          <PacksTable />
         </Grid>
       </Box>
     </>

@@ -9,6 +9,7 @@ const initialState = {
     {
       _id: "",
       user_id: "",
+      user_name: "",
       name: "",
       cardsCount: 0,
       created: "",
@@ -17,6 +18,7 @@ const initialState = {
   ],
   page: 1,
   pageCount: 5,
+  packID: "",
   cardPacksTotalCount: 0,
 };
 
@@ -47,6 +49,13 @@ export const packsReducer = (
       };
     }
 
+    case "PACKS/set-packID": {
+      return {
+        ...state,
+        packID: action.packID,
+      };
+    }
+
     default:
       return state;
   }
@@ -63,6 +72,8 @@ export const setPageAC = (page: number) =>
 export const setPageCountAC = (pageCount: number) =>
   ({ type: "PACKS/set-countPage", pageCount } as const);
 
+export const setPackIdAC = (packID: string) =>
+  ({ type: "PACKS/set-packID", packID } as const);
 // ==== THUNKS =====
 
 export const getPacksListTC =
@@ -82,11 +93,15 @@ export const getPacksListTC =
   };
 
 export const getUserPacksListTC =
-  (userID: string): AppThunk =>
+  (page: number, pageCount: number, userID: string): AppThunk =>
   async (dispatch) => {
     try {
       dispatch(appSetStatusAC("loading"));
-      const response = await getPacksAPI.getUserPacksList(userID);
+      const response = await getPacksAPI.getUserPacksList(
+        page,
+        pageCount,
+        userID
+      );
 
       dispatch(getPacksCardsAC(response.data));
     } catch (e) {
@@ -135,11 +150,15 @@ export const getRangeredPacksListTC =
   };
 
 export const getSortPacksListTC =
-  (sortUpdate: string): AppThunk =>
+  (page: number, pageCount: number, sortUpdate: string): AppThunk =>
   async (dispatch) => {
     try {
       dispatch(appSetStatusAC("loading"));
-      const response = await getPacksAPI.getSortPacksList(sortUpdate);
+      const response = await getPacksAPI.getSortPacksList(
+        page,
+        pageCount,
+        sortUpdate
+      );
 
       dispatch(getPacksCardsAC(response.data));
     } catch (e) {
@@ -208,6 +227,7 @@ export const totalPacksCountSelect = (state: AppRootStateType) =>
 export const pageSelect = (state: AppRootStateType) => state.packs.page;
 export const pageCountSelect = (state: AppRootStateType) =>
   state.packs.pageCount;
+export const packIdSelect = (state: AppRootStateType) => state.packs.packID;
 
 // ==== TYPES ====
 export type InitialStateType = typeof initialState;
@@ -216,8 +236,10 @@ export type RequestStatusType = "idle" | "loading" | "succeeded" | "failed";
 export type GetPacksCardsType = ReturnType<typeof getPacksCardsAC>;
 export type SetPageType = ReturnType<typeof setPageAC>;
 export type SetPageCountType = ReturnType<typeof setPageCountAC>;
+export type SetPackIdType = ReturnType<typeof setPackIdAC>;
 
 export type PacksActionsTypes =
   | GetPacksCardsType
   | SetPageType
-  | SetPageCountType;
+  | SetPageCountType
+  | SetPackIdType;
